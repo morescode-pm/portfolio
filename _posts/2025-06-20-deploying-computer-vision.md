@@ -23,8 +23,8 @@ Training and publishing a computer vision model on the web.
  - Crop (to crop or not to crop) images and try fine tuning speciesnet
 
 # The goal (why do this?)
-Urban Rivers aims to improve urban environments for animals and humans by revitalizing waterways with floating wetland installaions.
-To understand the effect of installtations, they aim to study changes in wildlife and human use in and along the chicago river.
+Urban Rivers aims to improve urban environments for animals and humans by revitalizing waterways with floating wetland installations.
+To understand the effect of installations, they aim to study changes in wildlife and human use in and along the chicago river.
 Changes in biodiversity and species abundance before and after the installation of floating wetlands would be evidence of an effect.
 How to gather this data? At least in-part through observations made using motion capture cameras.  
 
@@ -36,7 +36,7 @@ I previously attempted to use _`SpeciesNet`_ to classify our images without any 
 All training took place on the kaggle platform. I chose kaggle for easy access to a GPU based on the expected need for fine tuning/training.  
 To get the images, I fed a long list of target species to the website's api and parsed the JSON response. ChatGPT was very helpful for making lists and troubleshooting the api.
 
-After getting metadata from 12118 image observations (images that had at least one observation) there were a few cleaning steps to do. At each step I rendered a snippet of the data to confrim what was happening was intentional. Cleaning involved deduplication, filling _`None`_ values with "blank", making sure that at least 3 people made the same species observation, filtering out multiple species (a tougher problem) and keeping single species or blank only images.  
+After getting metadata from 12118 image observations (images that had at least one observation) there were a few cleaning steps to do. At each step I rendered a snippet of the data to confirm what was happening was intentional. Cleaning involved deduplication, filling _`None`_ values with "blank", making sure that at least 3 people made the same species observation, filtering out multiple species (a tougher problem) and keeping single species or blank only images.  
 
 At the end of cleaning we had 1228 images remaining (only about 10%) with only 4 categories having over 100 images, and a total of 9 categories with at least 26 pictures.  
 Normally, we would want at least 100-200 images per class - but at this moment that would only let us train on canadian geese, ducks, spotted sandpipers, and blank images. So in order to keep things interesting I set a threshold of at least 26.
@@ -53,7 +53,7 @@ Training started to converge at 5 epochs, so for the sake of iteration in the fu
 
 <img src="/assets/images/fastai-deploy/classify.png">
 
-Here's a small prediction outcome panel from images witheld from training and validation (test images):
+Here's a small prediction outcome panel from images withheld from training and validation (test images):
 
 <img src="/assets/images/fastai-deploy/res18x25_output.png">
 
