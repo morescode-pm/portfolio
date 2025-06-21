@@ -10,17 +10,17 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Training and publishing a computer vision model on the web. Try It Here! 🧪 Lightweight JavaScript demo 🚀 Full-featured Gradio app" />
 <meta property="og:description" content="Training and publishing a computer vision model on the web. Try It Here! 🧪 Lightweight JavaScript demo 🚀 Full-featured Gradio app" />
-<link rel="canonical" href="http://localhost:4000/2025/06/20/deploying-computer-vision.html" />
-<meta property="og:url" content="http://localhost:4000/2025/06/20/deploying-computer-vision.html" />
+<link rel="canonical" href="https://www.morescode-analytics.com/2025/06/20/deploying-computer-vision.html" />
+<meta property="og:url" content="https://www.morescode-analytics.com/2025/06/20/deploying-computer-vision.html" />
 <meta property="og:site_name" content="MORESCODE ANALYTICS LLC" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2025-06-20T00:00:00-05:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Deploying a computer vision model" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Paul Moresco"},"dateModified":"2025-06-20T00:00:00-05:00","datePublished":"2025-06-20T00:00:00-05:00","description":"Training and publishing a computer vision model on the web. Try It Here! 🧪 Lightweight JavaScript demo 🚀 Full-featured Gradio app","headline":"Deploying a computer vision model","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2025/06/20/deploying-computer-vision.html"},"url":"http://localhost:4000/2025/06/20/deploying-computer-vision.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Paul Moresco"},"dateModified":"2025-06-20T00:00:00-05:00","datePublished":"2025-06-20T00:00:00-05:00","description":"Training and publishing a computer vision model on the web. Try It Here! 🧪 Lightweight JavaScript demo 🚀 Full-featured Gradio app","headline":"Deploying a computer vision model","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.morescode-analytics.com/2025/06/20/deploying-computer-vision.html"},"url":"https://www.morescode-analytics.com/2025/06/20/deploying-computer-vision.html"}</script>
 <!-- End Jekyll SEO tag -->
-<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="MORESCODE ANALYTICS LLC" />
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://www.morescode-analytics.com/feed.xml" title="MORESCODE ANALYTICS LLC" />
 </head>
 <body><header class="site-header">
 
@@ -76,8 +76,8 @@
 </ol>
 
 <h1 id="the-goal-why-do-this">The goal (why do this?)</h1>
-<p>Urban Rivers aims to improve urban environments for animals and humans by revitalizing waterways with floating wetland installaions.
-To understand the effect of installtations, they aim to study changes in wildlife and human use in and along the chicago river.
+<p>Urban Rivers aims to improve urban environments for animals and humans by revitalizing waterways with floating wetland installations.
+To understand the effect of installations, they aim to study changes in wildlife and human use in and along the chicago river.
 Changes in biodiversity and species abundance before and after the installation of floating wetlands would be evidence of an effect.
 How to gather this data? At least in-part through observations made using motion capture cameras.</p>
 
@@ -89,7 +89,7 @@ How to gather this data? At least in-part through observations made using motion
 <p>All training took place on the kaggle platform. I chose kaggle for easy access to a GPU based on the expected need for fine tuning/training.<br />
 To get the images, I fed a long list of target species to the website’s api and parsed the JSON response. ChatGPT was very helpful for making lists and troubleshooting the api.</p>
 
-<p>After getting metadata from 12118 image observations (images that had at least one observation) there were a few cleaning steps to do. At each step I rendered a snippet of the data to confrim what was happening was intentional. Cleaning involved deduplication, filling <em><code class="language-plaintext highlighter-rouge">None</code></em> values with “blank”, making sure that at least 3 people made the same species observation, filtering out multiple species (a tougher problem) and keeping single species or blank only images.</p>
+<p>After getting metadata from 12118 image observations (images that had at least one observation) there were a few cleaning steps to do. At each step I rendered a snippet of the data to confirm what was happening was intentional. Cleaning involved deduplication, filling <em><code class="language-plaintext highlighter-rouge">None</code></em> values with “blank”, making sure that at least 3 people made the same species observation, filtering out multiple species (a tougher problem) and keeping single species or blank only images.</p>
 
 <p>At the end of cleaning we had 1228 images remaining (only about 10%) with only 4 categories having over 100 images, and a total of 9 categories with at least 26 pictures.<br />
 Normally, we would want at least 100-200 images per class - but at this moment that would only let us train on canadian geese, ducks, spotted sandpipers, and blank images. So in order to keep things interesting I set a threshold of at least 26.</p>
@@ -106,7 +106,7 @@ Training started to converge at 5 epochs, so for the sake of iteration in the fu
 
 <p><img src="/assets/images/fastai-deploy/classify.png" /></p>
 
-<p>Here’s a small prediction outcome panel from images witheld from training and validation (test images):</p>
+<p>Here’s a small prediction outcome panel from images withheld from training and validation (test images):</p>
 
 <p><img src="/assets/images/fastai-deploy/res18x25_output.png" /></p>
 
