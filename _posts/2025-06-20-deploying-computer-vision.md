@@ -1,6 +1,6 @@
 ---
 layout: post
-tags: [fastai, html, js, gradio, computervision, huggingface]
+tags: [python, fastai, html, js, gradio, computervision, huggingface]
 title: Deploying a computer vision model
 # published: false
 ---

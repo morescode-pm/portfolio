@@ -1,5 +1,116 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://www.morescode-analytics.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.morescode-analytics.com/" rel="alternate" type="text/html" /><updated>2025-06-21T15:47:57-05:00</updated><id>https://www.morescode-analytics.com/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
-</subtitle><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><entry><title type="html">Deploying a computer vision model</title><link href="https://www.morescode-analytics.com/2025/06/20/deploying-computer-vision.html" rel="alternate" type="text/html" title="Deploying a computer vision model" /><published>2025-06-20T00:00:00-05:00</published><updated>2025-06-20T00:00:00-05:00</updated><id>https://www.morescode-analytics.com/2025/06/20/deploying-computer-vision</id><content type="html" xml:base="https://www.morescode-analytics.com/2025/06/20/deploying-computer-vision.html"><![CDATA[<p>Training and publishing a computer vision model on the web.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-06-24T16:43:59-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
+</subtitle><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><entry><title type="html">Filtering 90% of blank wildife photos for a better UX</title><link href="http://localhost:4000/2025/06/27/filtering-90-pct-blank-wildlife.html" rel="alternate" type="text/html" title="Filtering 90% of blank wildife photos for a better UX" /><published>2025-06-27T00:00:00-05:00</published><updated>2025-06-27T00:00:00-05:00</updated><id>http://localhost:4000/2025/06/27/filtering-90-pct-blank-wildlife</id><content type="html" xml:base="http://localhost:4000/2025/06/27/filtering-90-pct-blank-wildlife.html"><![CDATA[<p>Our community wildlife classification/identification project is live at <a href="https://rangers.urbanrivers.org/cameratrap">rangers.urbanrivers.org</a>.<br />
+Using AI, we are massively fixing the boring part.</p>
+
+<p>Over the first 9 months, volunteers have labeled just over 60k images in our database (oct’24-jun’25).<br />
+Of these, ~46k were labeled blank and ~14k were labeled as containing at least one animal.<br />
+A human labeling rate of about 6.7k images per month with 77% of those being blanks.</p>
+
+<p>Extrapolating that number to the 200k+ images currently needing labels.. we could be looking at 154k blank images (😴). 
+At our labeling rate - ignoring exhausion - that should take another 21 months (almost 2 years) to complete. 
+Meanwhile we are still generating thousands of additional images.</p>
+
+<p>This post will describe how we’re making use of the speciesnet (and megadetector) results from the first pass through our dataset</p>
+
+<p>Project Steps so far:</p>
+<ul>
+  <li>
+    <ol>
+      <li>Generate Speciesnet Inference on dev and then production images
+        <ul>
+          <li>Explore results, classifications and detections</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <ol>
+      <li>Try to fine-tune an imagenet model for a site specific classification system with limited data
+        <ul>
+          <li>Explore results, classifications and confusion matrices</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <ol>
+      <li>Process speciesnet inferences and append results to MongoDB records
+        <ul>
+          <li>Compare Humans vs AI in Tableau</li>
+          <li><strong>(This post)</strong> - Implement aiResults filters for less human labeling fatigue.</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<p>Users have to identify animals - but most images are blank</p>
+
+<p>Blank motion capture images happen when grass/leaves/wind sets off the sensor.</p>
+
+<p>As is 90 % of our images are blanks.</p>
+
+<p>We ran speciesnet on Kaggle
+We processed the output file to extract detections.</p>
+
+<p>We built filters to show only images with at least 75% chance of an animal first.</p>
+
+<p>Next Steps:</p>
+<ul>
+  <li>
+    <ol>
+      <li>Reinforcment model training - Using complementary approaches for curating and fine tuning models</li>
+    </ol>
+  </li>
+</ul>
+
+<p>Using speciesnet inference to source images (done)
+Using early imagenet/pytorch classification to source images (todo)</p>
+
+<p>Confirming sourced images and repetitive rounds of cleaning + fine tuning  (todo)</p>
+
+<p>SpeciesNet was described by Gadot et al.<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></p>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>Gadot, T., Istrate, Ș., Kim, H., Morris, D., Beery, S., Birch, T., &amp; Ahumada, J. (2024). <em>To crop or not to crop: Comparing whole-image and cropped classification on a large dataset of camera trap images.</em> IET Computer Vision. Wiley Online Library. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="computervision" /><category term="ux" /><category term="ui" /><category term="node" /><category term="vercel" /><category term="mongodb" /><category term="jules" /><summary type="html"><![CDATA[Our community wildlife classification/identification project is live at rangers.urbanrivers.org. Using AI, we are massively fixing the boring part.]]></summary></entry><entry><title type="html">Comparing AI computer vision with Human Labeling - Wildlife Cameras</title><link href="http://localhost:4000/2025/06/24/exploring-ai-vs-human-cameratraps.html" rel="alternate" type="text/html" title="Comparing AI computer vision with Human Labeling - Wildlife Cameras" /><published>2025-06-24T00:00:00-05:00</published><updated>2025-06-24T00:00:00-05:00</updated><id>http://localhost:4000/2025/06/24/exploring-ai-vs-human-cameratraps</id><content type="html" xml:base="http://localhost:4000/2025/06/24/exploring-ai-vs-human-cameratraps.html"><![CDATA[<p>Project Steps so far:</p>
+<ul>
+  <li>
+    <ol>
+      <li>Generate Speciesnet Inference on dev and then production images
+        <ul>
+          <li>Explore results, classifications and detections</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <ol>
+      <li>Try to fine-tune an imagenet model for a site specific classification system with limited data
+        <ul>
+          <li>Explore results, classifications and confusion matrices</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <ol>
+      <li>Process speciesnet inferences and append results to MongoDB records
+        <ul>
+          <li><strong>(This post)</strong> Compare Humans vs AI in Tableau</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<p>Kaggle notebook for EDA</p>
+
+<p>Tableau for EDA</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="tableau" /><category term="speciesnet" /><category term="pandas" /><summary type="html"><![CDATA[Project Steps so far: Generate Speciesnet Inference on dev and then production images Explore results, classifications and detections Try to fine-tune an imagenet model for a site specific classification system with limited data Explore results, classifications and confusion matrices Process speciesnet inferences and append results to MongoDB records (This post) Compare Humans vs AI in Tableau]]></summary></entry><entry><title type="html">Deploying a computer vision model</title><link href="http://localhost:4000/2025/06/20/deploying-computer-vision.html" rel="alternate" type="text/html" title="Deploying a computer vision model" /><published>2025-06-20T00:00:00-05:00</published><updated>2025-06-20T00:00:00-05:00</updated><id>http://localhost:4000/2025/06/20/deploying-computer-vision</id><content type="html" xml:base="http://localhost:4000/2025/06/20/deploying-computer-vision.html"><![CDATA[<p>Training and publishing a computer vision model on the web.</p>
 <h4 id="try-it-here">Try It Here!</h4>
 <ul>
   <li><a href="/hfapi">🧪 Lightweight JavaScript demo</a></li>
@@ -92,7 +203,7 @@ To iterate and improve here’s a short list of what to do first.</p>
 <h2 id="update">Update</h2>
 <p>The original dataloaders object was being passed “Resize(224)” - this was doing a center crop and removing the target species sometimes. By adding Resize(224, method=’squish’) and a class for cropping the top and bottom - this was resolved while also removing the cameratrap overlays.</p>
 
-<p>This, plus checking timm for state of the art models and switching to convnext_tiny improved the error rate from 22% to 11%!</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="fastai" /><category term="html" /><category term="js" /><category term="gradio" /><category term="computervision" /><category term="huggingface" /><summary type="html"><![CDATA[Training and publishing a computer vision model on the web. Try It Here! 🧪 Lightweight JavaScript demo 🚀 Full-featured Gradio app]]></summary></entry><entry><title type="html">Building a Webapp for Species Geofencing</title><link href="https://www.morescode-analytics.com/2025/06/07/species-geofence.html" rel="alternate" type="text/html" title="Building a Webapp for Species Geofencing" /><published>2025-06-07T00:00:00-05:00</published><updated>2025-06-07T00:00:00-05:00</updated><id>https://www.morescode-analytics.com/2025/06/07/species-geofence</id><content type="html" xml:base="https://www.morescode-analytics.com/2025/06/07/species-geofence.html"><![CDATA[<p>One of the issues we experienced with speciesnet classification was results where the species was not valid for our location. In speciesnet - specifying a geofence coordinate will cause missclassifications to move up to the highest level hierarchy - in most cases, this classifies an animal as “animal.”</p>
+<p>This, plus checking timm for state of the art models and switching to convnext_tiny improved the error rate from 22% to 11%!</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="fastai" /><category term="html" /><category term="js" /><category term="gradio" /><category term="computervision" /><category term="huggingface" /><summary type="html"><![CDATA[Training and publishing a computer vision model on the web. Try It Here! 🧪 Lightweight JavaScript demo 🚀 Full-featured Gradio app]]></summary></entry><entry><title type="html">Building a Webapp for Species Geofencing</title><link href="http://localhost:4000/2025/06/07/species-geofence.html" rel="alternate" type="text/html" title="Building a Webapp for Species Geofencing" /><published>2025-06-07T00:00:00-05:00</published><updated>2025-06-07T00:00:00-05:00</updated><id>http://localhost:4000/2025/06/07/species-geofence</id><content type="html" xml:base="http://localhost:4000/2025/06/07/species-geofence.html"><![CDATA[<p>One of the issues we experienced with speciesnet classification was results where the species was not valid for our location. In speciesnet - specifying a geofence coordinate will cause missclassifications to move up to the highest level hierarchy - in most cases, this classifies an animal as “animal.”</p>
 
 <p>So, to help validate lists of species relevant to our area, I built a <a href="https://morescode-pm.github.io/geofence-polygon/">webapp for looking up species</a>.
 <a href="https://morescode-pm.github.io/geofence-polygon/" target="_blank">
@@ -246,7 +357,7 @@ Joining and filtering to find what species should be valid for a location is pos
 | western pond turtle      | [CA, OR, NV]                                         |
 | white-lipped peccary     | [TX, CO, TX]                                         |</pre>
 
-<p>Note we didn’t apply any geofencing to this run of speciesnet - so it’s expected to return the highest confidence match without ‘rolling-up’ to the higher taxonomy level.</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="ai" /><category term="html" /><category term="js" /><category term="cursor" /><category term="jules" /><category term="claude" /><category term="gpt4o" /><summary type="html"><![CDATA[One of the issues we experienced with speciesnet classification was results where the species was not valid for our location. In speciesnet - specifying a geofence coordinate will cause missclassifications to move up to the highest level hierarchy - in most cases, this classifies an animal as “animal.”]]></summary></entry><entry><title type="html">Catch A Vibe Code</title><link href="https://www.morescode-analytics.com/2025/06/03/catch-a-vibe-code.html" rel="alternate" type="text/html" title="Catch A Vibe Code" /><published>2025-06-03T00:00:00-05:00</published><updated>2025-06-03T00:00:00-05:00</updated><id>https://www.morescode-analytics.com/2025/06/03/catch-a-vibe-code</id><content type="html" xml:base="https://www.morescode-analytics.com/2025/06/03/catch-a-vibe-code.html"><![CDATA[<p>I joined an ai for conservation slack group recently. In that group, one of the developers of SpeciesNet (<a href="/2025/05/22/camera-trap-computer-vision.html">camera trap computer vision</a>) and the creator of the MegaDetector object detection model, <a href="https://github.com/agentmorris">Dan Morris</a>, hosted a “Vibe coding party” this week.</p>
+<p>Note we didn’t apply any geofencing to this run of speciesnet - so it’s expected to return the highest confidence match without ‘rolling-up’ to the higher taxonomy level.</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="ai" /><category term="html" /><category term="js" /><category term="cursor" /><category term="jules" /><category term="claude" /><category term="gpt4o" /><summary type="html"><![CDATA[One of the issues we experienced with speciesnet classification was results where the species was not valid for our location. In speciesnet - specifying a geofence coordinate will cause missclassifications to move up to the highest level hierarchy - in most cases, this classifies an animal as “animal.”]]></summary></entry><entry><title type="html">Catch A Vibe Code</title><link href="http://localhost:4000/2025/06/03/catch-a-vibe-code.html" rel="alternate" type="text/html" title="Catch A Vibe Code" /><published>2025-06-03T00:00:00-05:00</published><updated>2025-06-03T00:00:00-05:00</updated><id>http://localhost:4000/2025/06/03/catch-a-vibe-code</id><content type="html" xml:base="http://localhost:4000/2025/06/03/catch-a-vibe-code.html"><![CDATA[<p>I joined an ai for conservation slack group recently. In that group, one of the developers of SpeciesNet (<a href="/2025/05/22/camera-trap-computer-vision.html">camera trap computer vision</a>) and the creator of the MegaDetector object detection model, <a href="https://github.com/agentmorris">Dan Morris</a>, hosted a “Vibe coding party” this week.</p>
 
 <p>The tools for agentic coding are developing rapidly - the point of the party was to start learning and using them now, so that in 6 months we have a much better understanding of the landscape.</p>
 
@@ -328,7 +439,7 @@ this.streaks.lastLoginDate = today; };
 <h2 id="in-summary">In Summary</h2>
 <p>The most incredible part of all of this was that I only had to (barely) review the code, and figure out testing/deployment strategies. When you think about the time it would take to learn new languages just to be able to make one small change (months). This is truly an amazing thing.</p>
 
-<!-- links  -->]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="ai" /><category term="html" /><category term="next.js" /><category term="css" /><category term="copilot" /><summary type="html"><![CDATA[I joined an ai for conservation slack group recently. In that group, one of the developers of SpeciesNet (camera trap computer vision) and the creator of the MegaDetector object detection model, Dan Morris, hosted a “Vibe coding party” this week.]]></summary></entry><entry><title type="html">Converting from HTML was a project</title><link href="https://www.morescode-analytics.com/2025/05/30/starting-from-scratch.html" rel="alternate" type="text/html" title="Converting from HTML was a project" /><published>2025-05-30T00:00:00-05:00</published><updated>2025-05-30T00:00:00-05:00</updated><id>https://www.morescode-analytics.com/2025/05/30/starting-from-scratch</id><content type="html" xml:base="https://www.morescode-analytics.com/2025/05/30/starting-from-scratch.html"><![CDATA[<p>Wow, making a website in Jekyll is great, but it definitely has a learning curve.<br />
+<!-- links  -->]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="ai" /><category term="html" /><category term="next.js" /><category term="css" /><category term="copilot" /><summary type="html"><![CDATA[I joined an ai for conservation slack group recently. In that group, one of the developers of SpeciesNet (camera trap computer vision) and the creator of the MegaDetector object detection model, Dan Morris, hosted a “Vibe coding party” this week.]]></summary></entry><entry><title type="html">Converting from HTML was a project</title><link href="http://localhost:4000/2025/05/30/starting-from-scratch.html" rel="alternate" type="text/html" title="Converting from HTML was a project" /><published>2025-05-30T00:00:00-05:00</published><updated>2025-05-30T00:00:00-05:00</updated><id>http://localhost:4000/2025/05/30/starting-from-scratch</id><content type="html" xml:base="http://localhost:4000/2025/05/30/starting-from-scratch.html"><![CDATA[<p>Wow, making a website in Jekyll is great, but it definitely has a learning curve.<br />
 Even after purchasing a domain, figuring out the DNS records for github, and getting an HTML page initially stood up there was still a lot to learn.</p>
 
 <p>Here are the steps I followed on windows:</p>
@@ -371,7 +482,7 @@ What you get for all the effort:</p>
 </ul>
 
 <p><br />
-Here’s a <a href="https://github.com/morescode-pm/portfolio/tree/gh-jekyll">link to the repo</a> where the project is stored.</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="jekyll" /><category term="ruby" /><category term="html" /><summary type="html"><![CDATA[Wow, making a website in Jekyll is great, but it definitely has a learning curve. Even after purchasing a domain, figuring out the DNS records for github, and getting an HTML page initially stood up there was still a lot to learn.]]></summary></entry><entry><title type="html">Learning PowerBI</title><link href="https://www.morescode-analytics.com/2025/05/25/learning-powerbi.html" rel="alternate" type="text/html" title="Learning PowerBI" /><published>2025-05-25T00:00:00-05:00</published><updated>2025-05-25T00:00:00-05:00</updated><id>https://www.morescode-analytics.com/2025/05/25/learning-powerbi</id><content type="html" xml:base="https://www.morescode-analytics.com/2025/05/25/learning-powerbi.html"><![CDATA[<p>Plant Co. Performance Dashboard.<br />
+Here’s a <a href="https://github.com/morescode-pm/portfolio/tree/gh-jekyll">link to the repo</a> where the project is stored.</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="jekyll" /><category term="ruby" /><category term="html" /><summary type="html"><![CDATA[Wow, making a website in Jekyll is great, but it definitely has a learning curve. Even after purchasing a domain, figuring out the DNS records for github, and getting an HTML page initially stood up there was still a lot to learn.]]></summary></entry><entry><title type="html">Learning PowerBI</title><link href="http://localhost:4000/2025/05/25/learning-powerbi.html" rel="alternate" type="text/html" title="Learning PowerBI" /><published>2025-05-25T00:00:00-05:00</published><updated>2025-05-25T00:00:00-05:00</updated><id>http://localhost:4000/2025/05/25/learning-powerbi</id><content type="html" xml:base="http://localhost:4000/2025/05/25/learning-powerbi.html"><![CDATA[<p>Plant Co. Performance Dashboard.<br />
 An example dataset from a fake company that sells real plants.<br />
 The dashboard is interactive, so please click through to satisfy your curiosity (tip: the embedded dashboard can be resized to fit your full screen in the lower right corner).</p>
 
@@ -558,7 +669,7 @@ The goal was to create a performance reporting dashboard for a company that woul
   _Report Title
   _Scatter Title
   _Waterfall Title</li>
-</ul>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="powerbi" /><category term="dax" /><summary type="html"><![CDATA[Plant Co. Performance Dashboard. An example dataset from a fake company that sells real plants. The dashboard is interactive, so please click through to satisfy your curiosity (tip: the embedded dashboard can be resized to fit your full screen in the lower right corner).]]></summary></entry><entry><title type="html">Analyzing Camera Trap Pictures with AI</title><link href="https://www.morescode-analytics.com/2025/05/22/camera-trap-computer-vision.html" rel="alternate" type="text/html" title="Analyzing Camera Trap Pictures with AI" /><published>2025-05-22T00:00:00-05:00</published><updated>2025-05-22T00:00:00-05:00</updated><id>https://www.morescode-analytics.com/2025/05/22/camera-trap-computer-vision</id><content type="html" xml:base="https://www.morescode-analytics.com/2025/05/22/camera-trap-computer-vision.html"><![CDATA[<p>Using SpeciesNet (Google AI) to sort through hundreds of thousands of wildlife pictures from motion detection cameras (camera traps).</p>
+</ul>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="powerbi" /><category term="dax" /><summary type="html"><![CDATA[Plant Co. Performance Dashboard. An example dataset from a fake company that sells real plants. The dashboard is interactive, so please click through to satisfy your curiosity (tip: the embedded dashboard can be resized to fit your full screen in the lower right corner).]]></summary></entry><entry><title type="html">Analyzing Camera Trap Pictures with AI</title><link href="http://localhost:4000/2025/05/22/camera-trap-computer-vision.html" rel="alternate" type="text/html" title="Analyzing Camera Trap Pictures with AI" /><published>2025-05-22T00:00:00-05:00</published><updated>2025-05-22T00:00:00-05:00</updated><id>http://localhost:4000/2025/05/22/camera-trap-computer-vision</id><content type="html" xml:base="http://localhost:4000/2025/05/22/camera-trap-computer-vision.html"><![CDATA[<p>Using SpeciesNet (Google AI) to sort through hundreds of thousands of wildlife pictures from motion detection cameras (camera traps).</p>
 
 <h3 id="skip-to-the-good-part">Skip to the good part:</h3>
 <p>Preview page created using Megadetector dev-tools on a subset of predictions.<br />
@@ -1172,7 +1283,7 @@ And <a href="/2025/06/07/species-geofence.html">read about here</a>.</p>
       <p>Gadot, T., Istrate, Ș., Kim, H., Morris, D., Beery, S., Birch, T., &amp; Ahumada, J. (2024). <em>To crop or not to crop: Comparing whole-image and cropped classification on a large dataset of camera trap images.</em> IET Computer Vision. Wiley Online Library. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
-</div>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="deeplearning" /><category term="computervision" /><category term="opencv" /><category term="ai" /><category term="conservation" /><summary type="html"><![CDATA[Using SpeciesNet (Google AI) to sort through hundreds of thousands of wildlife pictures from motion detection cameras (camera traps).]]></summary></entry><entry><title type="html">Data Science Salaries</title><link href="https://www.morescode-analytics.com/2025/04/30/data-science-salaries.html" rel="alternate" type="text/html" title="Data Science Salaries" /><published>2025-04-30T00:00:00-05:00</published><updated>2025-04-30T00:00:00-05:00</updated><id>https://www.morescode-analytics.com/2025/04/30/data-science-salaries</id><content type="html" xml:base="https://www.morescode-analytics.com/2025/04/30/data-science-salaries.html"><![CDATA[<p>Finding myself in an unscheduled sabatical / job search I decided to upskill in Looker while reviewing Data Science Salaries in Chicago.</p>
+</div>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="deeplearning" /><category term="computervision" /><category term="opencv" /><category term="ai" /><category term="conservation" /><summary type="html"><![CDATA[Using SpeciesNet (Google AI) to sort through hundreds of thousands of wildlife pictures from motion detection cameras (camera traps).]]></summary></entry><entry><title type="html">Data Science Salaries</title><link href="http://localhost:4000/2025/04/30/data-science-salaries.html" rel="alternate" type="text/html" title="Data Science Salaries" /><published>2025-04-30T00:00:00-05:00</published><updated>2025-04-30T00:00:00-05:00</updated><id>http://localhost:4000/2025/04/30/data-science-salaries</id><content type="html" xml:base="http://localhost:4000/2025/04/30/data-science-salaries.html"><![CDATA[<p>Finding myself in an unscheduled sabatical / job search I decided to upskill in Looker while reviewing Data Science Salaries in Chicago.</p>
 
 <p>When asked really early, it’s easy to point to this and ask for a range within the 25pct to 75pct band of the listed salary or industry salaries.</p>
 
@@ -1212,11 +1323,11 @@ Then, the dimensions for drilling down I had were <code class="language-plaintex
 
 <p><img src="/assets/images/salaries/4_drillup.png" /></p>
 
-<p>In the visual we can see how tech salaries are generally higher, and food and public sectors are lower. Part of the reason for this is the bias I have on jobs that look interesting, but I think the trend would hold relatively well.</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="jobs" /><category term="looker" /><category term="dax" /><summary type="html"><![CDATA[Finding myself in an unscheduled sabatical / job search I decided to upskill in Looker while reviewing Data Science Salaries in Chicago.]]></summary></entry><entry><title type="html">Blueberry Chihuahuas</title><link href="https://www.morescode-analytics.com/2025/03/04/blueberry-chihuahuas.html" rel="alternate" type="text/html" title="Blueberry Chihuahuas" /><published>2025-03-04T00:00:00-06:00</published><updated>2025-03-04T00:00:00-06:00</updated><id>https://www.morescode-analytics.com/2025/03/04/blueberry-chihuahuas</id><content type="html" xml:base="https://www.morescode-analytics.com/2025/03/04/blueberry-chihuahuas.html"><![CDATA[<p>I decided to learn how to interact with computer vision models using the FastAI infrastructure.<br />
+<p>In the visual we can see how tech salaries are generally higher, and food and public sectors are lower. Part of the reason for this is the bias I have on jobs that look interesting, but I think the trend would hold relatively well.</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="jobs" /><category term="looker" /><category term="dax" /><summary type="html"><![CDATA[Finding myself in an unscheduled sabatical / job search I decided to upskill in Looker while reviewing Data Science Salaries in Chicago.]]></summary></entry><entry><title type="html">Blueberry Chihuahuas</title><link href="http://localhost:4000/2025/03/04/blueberry-chihuahuas.html" rel="alternate" type="text/html" title="Blueberry Chihuahuas" /><published>2025-03-04T00:00:00-06:00</published><updated>2025-03-04T00:00:00-06:00</updated><id>http://localhost:4000/2025/03/04/blueberry-chihuahuas</id><content type="html" xml:base="http://localhost:4000/2025/03/04/blueberry-chihuahuas.html"><![CDATA[<p>I decided to learn how to interact with computer vision models using the FastAI infrastructure.<br />
 The coursework is taught by Jeremy Howard - former President and Chief Scientist at Kaggle and long time AI leader.</p>
 
 <p>Here’s the embedded notebook for the first lesson (also available <a href="https://www.kaggle.com/code/morescope/is-it-a-chihuahua-or-blueberry-muffin">directly on Kaggle</a>).<br />
 The goal was to learn how to use the fastai toolkit for a simple image classification problem.<br />
 I chose a difficult task for humans to do: differentiate between chihuahuas and blueberry muffins.</p>
 
-<iframe src="/assets/notebooks/html/blueberry-chihuahua.html" width="100%" height="900" style="border:1px solid #ccc; border-radius:8px;"></iframe>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="deeplearning" /><category term="computervision" /><category term="pytorch" /><category term="ai" /><summary type="html"><![CDATA[I decided to learn how to interact with computer vision models using the FastAI infrastructure. The coursework is taught by Jeremy Howard - former President and Chief Scientist at Kaggle and long time AI leader.]]></summary></entry></feed>
+<iframe src="/assets/notebooks/html/blueberry-chihuahua.html" width="100%" height="900" style="border:1px solid #ccc; border-radius:8px;"></iframe>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="deeplearning" /><category term="computervision" /><category term="pytorch" /><category term="ai" /><summary type="html"><![CDATA[I decided to learn how to interact with computer vision models using the FastAI infrastructure. The coursework is taught by Jeremy Howard - former President and Chief Scientist at Kaggle and long time AI leader.]]></summary></entry></feed>
