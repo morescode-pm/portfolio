@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Comparing AI computer vision with Human Labeling - Wildlife Cameras | MORESCODE ANALYTICS LLC</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Comparing AI computer vision with Human Labeling - Wildlife Cameras" />
+<meta name="author" content="Paul Moresco" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="We have AI results and volunteer contributed human labels for approximately 60,000 images. This post explores the relationships between human error and ai errors." />
+<meta property="og:description" content="We have AI results and volunteer contributed human labels for approximately 60,000 images. This post explores the relationships between human error and ai errors." />
+<link rel="canonical" href="http://localhost:4000/2025/06/26/exploring-ai-vs-human-cameratraps.html" />
+<meta property="og:url" content="http://localhost:4000/2025/06/26/exploring-ai-vs-human-cameratraps.html" />
+<meta property="og:site_name" content="MORESCODE ANALYTICS LLC" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-06-26T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Comparing AI computer vision with Human Labeling - Wildlife Cameras" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Paul Moresco"},"dateModified":"2025-06-26T00:00:00-05:00","datePublished":"2025-06-26T00:00:00-05:00","description":"We have AI results and volunteer contributed human labels for approximately 60,000 images. This post explores the relationships between human error and ai errors.","headline":"Comparing AI computer vision with Human Labeling - Wildlife Cameras","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2025/06/26/exploring-ai-vs-human-cameratraps.html"},"url":"http://localhost:4000/2025/06/26/exploring-ai-vs-human-cameratraps.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="MORESCODE ANALYTICS LLC" />
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">MORESCODE ANALYTICS LLC</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/about/">About</a>
+  <a class="nav-item" href="/portfolio.html">Portfolio</a>
+</div>
+      </nav>
+  </div>
+</header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="post"><h1 class="page-heading" style="text-align: center;">Comparing AI computer vision with Human Labeling - Wildlife Cameras</h1><div class="post-meta" style="text-align: center; color: #666; margin-bottom: 1.5em;">
+    Jun 26, 2025&nbsp;-&nbsp;<span class="post-tag" style="color: teal">#python</a>, <span class="post-tag" style="color: teal">#tableau</a>, <span class="post-tag" style="color: teal">#speciesnet</a>, <span class="post-tag" style="color: teal">#pandas</a>, <span class="post-tag" style="color: teal">#ETL</a></div>
+
+  <div class="post-content">
+    <p>We have AI results and volunteer contributed human labels for approximately 60,000 images.<br />
+This post explores the relationships between human error and ai errors.</p>
+
+<p>Project Steps so far:</p>
+<ol>
+  <li><a href="/2025/05/22/camera-trap-computer-vision.html">Generate Speciesnet Inference on dev and then production images</a></li>
+  <li><a href="/2025/06/20/deploying-computer-vision.html">Try to fine-tune an imagenet model for a site specific classification system with limited data</a>
+    <ul>
+      <li>Explore results, classifications and confusion matrices</li>
+    </ul>
+  </li>
+  <li><strong>(linked below)</strong> <a href="#process-speciesnet-inferences-for-mongodb-upload">Process speciesnet inferences and append results to MongoDB records</a>
+    <ul>
+      <li><strong>(This post)</strong> Compare Humans vs AI in Tableau</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="process-speciesnet-inferences-for-mongodb-upload">Process speciesnet inferences for MongoDB upload</h2>
+<p>Essentially, we open the speciesnet inference json and extract detection confidences for each image.<br />
+For each <code class="language-plaintext highlighter-rouge">animal</code> and <code class="language-plaintext highlighter-rouge">human</code> detections we find the maximum - then for the max between both, we infer the <code class="language-plaintext highlighter-rouge">blank</code> probability. 
+Vehicles are default lumped into <code class="language-plaintext highlighter-rouge">blanks</code> and we have useful features for eventual filtering parameters.</p>
+
+<p>See the code in this repo: <a href="https://github.com/morescode-pm/mongo-ur-utils/blob/main/ai_results/ai_detection_parser.py">mongo-ur-utils</a></p>
+
+<h2 id="kaggle-notebook-for-etl">Kaggle notebook for ETL</h2>
+<p>Given that the MongoDB now has aiResults for all 200k+ images and human labels for around 60k, we can extract the relevant fields from each image (linked by a mediaID) and discover the relationships between them. For example:</p>
+<ul>
+  <li>If we were to implement a filter that removed low confidence animal detections, how many false negatives (ai missed the animal) would we be overlooking?</li>
+  <li>How many images in a high ai animal detection confidence have we labeled already?
+    <ul>
+      <li>What portion of these have 3 observations?</li>
+      <li>What default filter settings might be affecting this?</li>
+    </ul>
+  </li>
+</ul>
+
+<p>First we grab the relevant fields - both <code class="language-plaintext highlighter-rouge">speciesConsensus</code> and <code class="language-plaintext highlighter-rouge">aiResults</code> are arrays/dictionaries so we will have to further query those.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">query</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">"speciesConsensus.0"</span><span class="p">:</span> <span class="p">{</span><span class="s">"$exists"</span><span class="p">:</span> <span class="bp">True</span><span class="p">},</span>
+    <span class="s">"aiResults.0"</span><span class="p">:</span> <span class="p">{</span><span class="s">"$exists"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+    <span class="p">}</span>  <span class="c1"># records that have both only - drops nulls or missing
+</span><span class="n">projection</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">"_id"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s">"mediaID"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">"publicURL"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">"speciesConsensus"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">"aiResults"</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">}</span>
+<span class="n">all_obs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">collection</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">projection</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>This returns a observation json <code class="language-plaintext highlighter-rouge">obs_json</code> which we further flatten with:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># flatten list init
+</span><span class="n">flat_rows</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># for each mediaID/item in obs_json
+</span><span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">obs_json</span><span class="p">:</span>
+    <span class="n">media_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'mediaID'</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'publicURL'</span><span class="p">)</span>
+    
+    <span class="c1"># Use first entry of speciesConsensus and aiResults
+</span>    <span class="c1"># Noting that speciesConsensus[0] is generally the animal consensus if there is one
+</span>    <span class="c1"># We could filter the results before extracting - but it's true enough for right now
+</span>    <span class="n">consensus</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'speciesConsensus'</span><span class="p">,</span> <span class="p">[{}])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ai</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'aiResults'</span><span class="p">,</span> <span class="p">[{}])[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">flat_rows</span><span class="p">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s">'mediaID'</span><span class="p">:</span> <span class="n">media_id</span><span class="p">,</span>
+        <span class="s">'publicURL'</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
+        <span class="s">'observationType'</span><span class="p">:</span> <span class="n">consensus</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'observationType'</span><span class="p">),</span>
+        <span class="s">'scientificName'</span><span class="p">:</span> <span class="n">consensus</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'scientificName'</span><span class="p">),</span>
+        <span class="s">'observationCount'</span><span class="p">:</span> <span class="n">consensus</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'observationCount'</span><span class="p">),</span>
+        <span class="s">'confBlank'</span><span class="p">:</span> <span class="n">ai</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'confBlank'</span><span class="p">),</span>
+        <span class="s">'confHuman'</span><span class="p">:</span> <span class="n">ai</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'confHuman'</span><span class="p">),</span>
+        <span class="s">'confAnimal'</span><span class="p">:</span> <span class="n">ai</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'confAnimal'</span><span class="p">),</span>
+    <span class="p">})</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">flat_rows</code> can now be condensed into a dataframe and exported from here for further analysis.<br />
+<code class="language-plaintext highlighter-rouge">df = pd.DataFrame(flat_rows)</code></p>
+
+<p><img src="/assets/images/species-validation/df_export.png" /></p>
+
+<p>Kaggle notebook found <a href="https://www.kaggle.com/code/morescope/speciesnet-validation">here</a>.</p>
+
+<h2 id="tableau-for-eda">Tableau for EDA</h2>
+<p>Exploring the dataset further, I built a dashboard to visualize things like:</p>
+<ul>
+  <li><strong>What do images look like where the ai thought there was an animal but people marked blank?</strong> (human false negatives)<br />
+<img src="/assets/images/species-validation/ai-found-animal.png" /></li>
+</ul>
+
+<p>There are human false negatives that ai would not have missed. This probably happens by mistake when people are reviewing multiple images with some lag between load times. There was no filter on number of observations - so some of the human false negatives would eventually bubble up as more observations are made on the same image by multiple people.</p>
+
+<ul>
+  <li><strong>What do images look like where the ai thought it was blank, but people marked an animal?</strong> (ai false negatives)<br />
+<img src="/assets/images/species-validation/ai-missed-animal.png" /></li>
+</ul>
+
+<p>There clearly are some images that people can see better than ai - but also some human false positives.</p>
+
+<ul>
+  <li><strong>Are there any particular species that the ai has a hard time detecting?</strong> (ai false negatives by class)
+    <ul>
+      <li>This portion of the table looks at the 50% probability odds with the aiResults filter with at least 100 images labeled.</li>
+    </ul>
+
+    <p><img src="/assets/images/species-validation/hard-times.png" /></p>
+  </li>
+</ul>
+
+<p>The worst losses happen in rattus norvegicus (brown rats), Aves (unspecified bird), Myomorpha (unspecified rodent), and Sylvilagus floridanus (rabbits). Keeping in mind these are not ‘deleted’ images but instead images that could be ignored in preference of accelerating others.</p>
+
+<ul>
+  <li><strong>What threshold would remove the most true blanks without accientally removing images with animal in them?</strong> (ai sensitivity)
+    <ul>
+      <li>These tables show the cumulative percentage where human labeled an animal (has animal) vs 5% bins of SpeciesNet confidence of an animal detection.</li>
+    </ul>
+
+    <div style="display: flex; gap: 10px;">
+  <img src="/assets/images/species-validation/counts-at-zero.png" style="width: 30%;" />
+  <img src="/assets/images/species-validation/counts-at-75.png" style="width: 30%;" />
+</div>
+  </li>
+</ul>
+
+<p>Already at just 5% probability of an animal - there’s an effective removal of 82.55% of blank images labeled by humans that would be filtered out.<br />
+That’s huge! We’re aiming at focusing on the most likely images with animals in them by setting a filter of 75% minimum confAnimal default - at that level that would remove 99.45% of blanks people are labeling - true blanks where nothing was in the image.</p>
+
+<p>At 75% - this does come at a cost of up to 47.7% of the images people have labeld as containing an animal (some false positives) would be initially filtered out.
+At 5% - that false negative cost drops to 19.79% in our sample. We’ll use these statistics to determine how to apply a filter to the user experience on rangers.urbanrivers.com.</p>
+
+<p>.</p>
+
+<p>Here’s a <a href="https://public.tableau.com/app/profile/paul.moresco/viz/URHumansvsAICameratraps/HumanLabels#1">link to the dashboard</a>, also embedded below.</p>
+
+<h2 id="tableau-dashboard--">Tableau Dashboard -</h2>
+<h1 id="ur-humans-vs-ai-cameratraps">UR Humans vs AI Cameratraps</h1>
+<script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+
+<style>
+  #vizWrapper {
+    width: 100%;
+    height: 500px;
+  }
+</style>
+
+<div id="vizWrapper">
+  <tableau-viz id="tableauViz" src="https://public.tableau.com/views/URHumansvsAICameratraps/HumanLabels" toolbar="bottom">
+  </tableau-viz>
+</div>
+
+
+  </div>
+</div>
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/"></data>
+
+  <div class="wrapper">
+    <div class="footer-row" style="text-align: center;"><div class="footer-author" style="margin-bottom: 8px;">
+          <span class="p-name">&copy; 2025 Paul Moresco </span>&nbsp;|&nbsp;
+            <a class="u-email" href="mailto:hello@morescode-analytics.com">hello@morescode-analytics.com</a></div><div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/morescode-pm" target="_blank" title="GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://www.linkedin.com/in/paul-moresco" target="_blank" title="Linkedin">
+      <span class="grey fa-brands fa-linkedin fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://www.kaggle.com/morescope/" target="_blank" title="Kaggle">
+      <span class="grey fa-brands fa-kaggle fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://public.tableau.com/app/profile/paul.moresco/vizzes" target="_blank" title="Tableau Public">
+      <span class="grey fa-brands fa-salesforce fa-lg"></span>
+    </a>
+  </li>
+</ul></div>
+    </div>
+  </div>
+</footer></body>
+
+</html>

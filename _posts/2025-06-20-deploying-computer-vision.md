@@ -1,6 +1,6 @@
 ---
 layout: post
-tags: [fastai, html, js, gradio, computervision, huggingface]
+tags: [python, fastai, html, js, gradio, computervision, CNN, huggingface]
 title: Deploying a computer vision model
 # published: false
 ---
@@ -48,7 +48,7 @@ The `aug_transforms()` used essentially - while fine-tuning the model - provide 
 
 <img src="/assets/images/fastai-deploy/2-dls-batch.png">
 
-I decided to try Resnet18 - because that's in the example for the fastai documentation (#overly-honest-methods).  
+I decided to try ResNet18 - because that's in the example for the fastai documentation (#overly-honest-methods).  
 Training started to converge at 5 epochs, so for the sake of iteration in the future I stopped there.  Here's the confusion matrix from only 26 images each (5 held for validation). Not bad! - clearly some issues with blanks, sandpipers and ducks but that has to be expected with the small dataset. 
 
 <img src="/assets/images/fastai-deploy/classify.png">
@@ -83,4 +83,4 @@ To iterate and improve here's a short list of what to do first.
 ## Update
 The original dataloaders object was being passed "Resize(224)" - this was doing a center crop and removing the target species sometimes. By adding Resize(224, method='squish') and a class for cropping the top and bottom - this was resolved while also removing the cameratrap overlays.  
 
-This, plus checking timm for state of the art models and switching to convnext_tiny improved the error rate from 22% to 11%!
+This, plus checking timm for state of the art models and switching to ConvNeXt_tiny improved the error rate from 22% to 11%!

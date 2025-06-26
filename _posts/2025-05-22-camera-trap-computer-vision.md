@@ -1,6 +1,6 @@
 ---
 layout: post
-tags: [deeplearning, computervision, opencv, ai, conservation]
+tags: [python, deeplearning, computervision, opencv, ai, conservation]
 title: Analyzing Camera Trap Pictures with AI
 ---
 
