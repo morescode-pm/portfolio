@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Filtering 90% of blank wildife photos for a better UX | MORESCODE ANALYTICS LLC</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Filtering 90% of blank wildife photos for a better UX" />
+<meta name="author" content="Paul Moresco" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Our community wildlife classification/identification project is live at rangers.urbanrivers.org. Using AI, we are massively fixing the boring part." />
+<meta property="og:description" content="Our community wildlife classification/identification project is live at rangers.urbanrivers.org. Using AI, we are massively fixing the boring part." />
+<link rel="canonical" href="http://localhost:4000/2025/06/27/filtering-90-pct-blank-wildlife.html" />
+<meta property="og:url" content="http://localhost:4000/2025/06/27/filtering-90-pct-blank-wildlife.html" />
+<meta property="og:site_name" content="MORESCODE ANALYTICS LLC" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-06-27T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Filtering 90% of blank wildife photos for a better UX" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Paul Moresco"},"dateModified":"2025-06-27T00:00:00-05:00","datePublished":"2025-06-27T00:00:00-05:00","description":"Our community wildlife classification/identification project is live at rangers.urbanrivers.org. Using AI, we are massively fixing the boring part.","headline":"Filtering 90% of blank wildife photos for a better UX","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2025/06/27/filtering-90-pct-blank-wildlife.html"},"url":"http://localhost:4000/2025/06/27/filtering-90-pct-blank-wildlife.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="MORESCODE ANALYTICS LLC" />
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">MORESCODE ANALYTICS LLC</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/about/">About</a>
+  <a class="nav-item" href="/portfolio.html">Portfolio</a>
+</div>
+      </nav>
+  </div>
+</header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="post"><h1 class="page-heading" style="text-align: center;">Filtering 90% of blank wildife photos for a better UX</h1><div class="post-meta" style="text-align: center; color: #666; margin-bottom: 1.5em;">
+    Jun 27, 2025&nbsp;-&nbsp;<span class="post-tag" style="color: teal">#computervision</a>, <span class="post-tag" style="color: teal">#ux</a>, <span class="post-tag" style="color: teal">#ui</a>, <span class="post-tag" style="color: teal">#node</a>, <span class="post-tag" style="color: teal">#vercel</a>, <span class="post-tag" style="color: teal">#mongodb</a>, <span class="post-tag" style="color: teal">#jules</a></div>
+
+  <div class="post-content">
+    <p>Our community wildlife classification/identification project is live at <a href="https://rangers.urbanrivers.org/cameratrap">rangers.urbanrivers.org</a>.<br />
+Using AI, we are massively fixing the boring part.</p>
+
+<h2 id="introduction">Introduction</h2>
+<p>Over the first 9 months, volunteers have labeled just over 60k images in our database (oct’24-jun’25).<br />
+Of these, ~46k were labeled blank (grass/leaves/wind sets off the sensor) and ~14k were labeled as containing at least one animal.</p>
+
+<p>A human labeling rate of about 6.7k images per month with 77% of those being blanks.</p>
+
+<p>Extrapolating that number to the 200k+ images currently needing labels and blanks being 77-84%.. we could be looking at 154-168k blank images (😴) that should take another 21-25 months (~2 years) to complete.</p>
+
+<p>This post will describe how we’re making use of the speciesnet (and megadetector) results from the first pass through our dataset.</p>
+
+<h3 id="project-steps-so-far">Project Steps so far:</h3>
+<ol>
+  <li><a href="/2025/05/22/camera-trap-computer-vision.html">Generate Speciesnet Inference on dev and then production images</a></li>
+  <li><a href="/2025/06/20/deploying-computer-vision.html">Try to fine-tune an imagenet model for a site specific classification system with limited data</a>
+    <ul>
+      <li>Explore results, classifications and confusion matrices</li>
+    </ul>
+  </li>
+  <li>Process speciesnet inferences and append results to MongoDB records
+    <ul>
+      <li><a href="/2025/06/26/exploring-ai-vs-human-cameratraps.html">Compare Humans vs AI in Tableau</a></li>
+      <li><strong>(This post)</strong> - Implement aiResults filters for less human labeling fatigue.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="adding-a-filter-based-on-speciesnet-detections">Adding a filter based on SpeciesNet detections</h2>
+<p>Users have to identify animals - but most images are blank.<br />
+SpeciesNet (based on EfficientNet) uses MegaDetector (based on YOLOv5) to detect objects in images, classify their probability as human, animal, vehicle - and draw bounding boxes around the images.</p>
+
+<p>When we ran speciesnet through our 200k+ images - approximately 90 % of our images showed up as total blanks (an confAnimal of 0.0). Based on initial validation of speciesnet vs human labels - this is likely at least 80% true blanks. So, while there is an argument for observed blanks vs passive assumed blanks, this represents an enormous bulk of VERY boring images to look at.</p>
+
+<h3 id="step-1-process-speciesnet-inferences-for-mongodb-upload">Step 1. Process speciesnet inferences for MongoDB upload</h3>
+<p>Just like exploring the data in our last post - we open the speciesnet inference json and extract detection confidences for each image.<br />
+The confidences are then uploaded to mongodb through some python script.</p>
+
+<p>See the code in this repo: <a href="https://github.com/morescode-pm/mongo-ur-utils/blob/main/ai_results/ai_mongo_operations.py">mongo-ur-utils</a></p>
+
+<h3 id="step-2-building-a-filter-in-an-existing-repo">Step 2. Building a Filter in an existing Repo</h3>
+<p>Enter Jules - google’s async coding agent hero to the rescue. I’m not a node developer, but I do have a very good idea of what we want and how to test the systems.
+After connecting to the site repo, I presented Jules with the following prompt:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I've added some aiResults data to my mongodb and want to be able to add filters
+ while looking through images on the observations site for the app.
+
+First, by default, if confHuman is anything above 0.50 we should not be showing those images 
+- please identify how we could do that.
+
+Second, we want to provide a slider on the existing filters to select 
+a "max confidence blank" value - ie if the value is 0.8, 
+then only images where confBlank is below 0.8 will show up.
+
+Here's the structure of one of the mongo records for example:
+
+{'_id': ObjectId('671a925b731cf4b5c4fd2203'), 
+'mediaID': 'fb04201b6417ea917fdd24e1a7415d8a', 
+'imageHash':
+...continues...
+
+</code></pre></div></div>
+
+<p>I’ll be honest - this took several hours of back and forth - but most of that was fine tuning and tweaking the behavior. So, it’s not automatic, but the structure and prototyping speed from concept to ideation/iteration is unmatched.  Ultimately we restructured the filter to work on confAnimal because pointing at confBlank was confusing, and caused some strange behaviors when the max confidence was actually human or vehicle.</p>
+
+<p>In the end, a fully functional modification to the already existing get request was created.</p>
+
+<p>Here’s what it looks like -</p>
+
+<p><img src="/assets/images/filtering-start/before-and-after.png" /></p>
+
+<p>Based on previous analysis, we chose  to show only images with at least 75% chance of an animal as the first default.</p>
+
+<p>The <a href="https://github.com/nkwsy/Wildmile/pull/271">PR can be seen here</a> and if the PR preview server is still live when reading this - <a href="https://wildmile-git-fork-morescode-pm-feat-ai-filters-urbanrivers.vercel.app/cameratrap/identify">go here</a>.<br />
+If not - the rangers site is public and <a href="https://rangers.urbanrivers.org/cameratrap">available here</a>.</p>
+
+<h2 id="next-steps">Next Steps:</h2>
+<p>We now have object detection, our own classification model, and effective human labeling filters. The next stages will involve reinforcment model training: Using complementary approaches for curating and fine tuning models.</p>
+
+<p>Without any real plans or order yet:</p>
+<ol>
+  <li>Using speciesnet inference to source images likely to have animals (done)</li>
+  <li>Using human labels to source new confirmed classficiations (in progress)</li>
+  <li>Using early imagenet/pytorch classification to source additional classified images (todo)</li>
+  <li><strong>Confirming sourced images and repetitive rounds of cleaning + fine tuning</strong> (todo)<br />
+— future work scope —</li>
+  <li>Building multi-class systems</li>
+  <li>Refining object detection to include counts.</li>
+  <li>Rolling out video classification.</li>
+</ol>
+
+
+  </div>
+</div>
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/"></data>
+
+  <div class="wrapper">
+    <div class="footer-row" style="text-align: center;"><div class="footer-author" style="margin-bottom: 8px;">
+          <span class="p-name">&copy; 2025 Paul Moresco </span>&nbsp;|&nbsp;
+            <a class="u-email" href="mailto:hello@morescode-analytics.com">hello@morescode-analytics.com</a></div><div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/morescode-pm" target="_blank" title="GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://www.linkedin.com/in/paul-moresco" target="_blank" title="Linkedin">
+      <span class="grey fa-brands fa-linkedin fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://www.kaggle.com/morescope/" target="_blank" title="Kaggle">
+      <span class="grey fa-brands fa-kaggle fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://public.tableau.com/app/profile/paul.moresco/vizzes" target="_blank" title="Tableau Public">
+      <span class="grey fa-brands fa-salesforce fa-lg"></span>
+    </a>
+  </li>
+</ul></div>
+    </div>
+  </div>
+</footer></body>
+
+</html>

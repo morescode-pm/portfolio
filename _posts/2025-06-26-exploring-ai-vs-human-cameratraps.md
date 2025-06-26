@@ -1,7 +1,7 @@
 ---
 layout: post
 tags: [python, tableau, speciesnet, pandas, ETL]
-title: Comparing AI computer vision with Human Labeling - Wildlife Cameras
+title: Comparing AI computer vision with Human Labeling
 ---
 
 We have AI results and volunteer contributed human labels for approximately 60,000 images.  
