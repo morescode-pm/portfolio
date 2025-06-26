@@ -2,36 +2,34 @@
 layout: post
 tags: [computervision, ux, ui, node, vercel, mongodb, jules]
 title: Filtering 90% of blank wildife photos for a better UX
+published: false
 ---
 
-Our community wildlife classification/identification project is live at [rangers.urbanrivers.org][2].  
+Our community wildlife classification/identification project is live at [rangers.urbanrivers.org][1].  
 Using AI, we are massively fixing the boring part.  
 
+# Introduction
 Over the first 9 months, volunteers have labeled just over 60k images in our database (oct'24-jun'25).  
-Of these, ~46k were labeled blank and ~14k were labeled as containing at least one animal.  
+Of these, ~46k were labeled blank (grass/leaves/wind sets off the sensor) and ~14k were labeled as containing at least one animal.  
+
 A human labeling rate of about 6.7k images per month with 77% of those being blanks.  
 
-Extrapolating that number to the 200k+ images currently needing labels.. we could be looking at 154k blank images (😴). 
-At our labeling rate - ignoring exhausion - that should take another 21 months (almost 2 years) to complete. 
-Meanwhile we are still generating thousands of additional images.
+Extrapolating that number to the 200k+ images currently needing labels and blanks being 77-84%.. we could be looking at 154-168k blank images (😴) that should take another 21-25 months (~2 years) to complete. 
 
-This post will describe how we're making use of the speciesnet (and megadetector) results from the first pass through our dataset
+This post will describe how we're making use of the speciesnet (and megadetector) results from the first pass through our dataset.
 
-Project Steps so far:
-- 1. Generate Speciesnet Inference on dev and then production images
-    - Explore results, classifications and detections
-- 2. Try to fine-tune an imagenet model for a site specific classification system with limited data
-    - Explore results, classifications and confusion matrices
-- 3. Process speciesnet inferences and append results to MongoDB records
-    - Compare Humans vs AI in Tableau
-    - **(This post)** - Implement aiResults filters for less human labeling fatigue.
-
-
+# Project Steps so far:
+1. [Generate Speciesnet Inference on dev and then production images][2]
+2. [Try to fine-tune an imagenet model for a site specific classification system with limited data][3]
+  - Explore results, classifications and confusion matrices
+3. Process speciesnet inferences and append results to MongoDB records
+  - [Compare Humans vs AI in Tableau][4]
+  - **(This post)** - Implement aiResults filters for less human labeling fatigue.
+  
+  
 
 
 Users have to identify animals - but most images are blank
-
-Blank motion capture images happen when grass/leaves/wind sets off the sensor.
 
 As is 90 % of our images are blanks.
 
@@ -52,10 +50,10 @@ Using early imagenet/pytorch classification to source images (todo)
 Confirming sourced images and repetitive rounds of cleaning + fine tuning  (todo)
 
 
-[3]: {% post_url 2025-05-22-camera-trap-computer-vision %}
 
-SpeciesNet was described by Gadot et al.[^1]
 
-[^1]: Gadot, T., Istrate, Ș., Kim, H., Morris, D., Beery, S., Birch, T., & Ahumada, J. (2024). *To crop or not to crop: Comparing whole-image and cropped classification on a large dataset of camera trap images.* IET Computer Vision. Wiley Online Library.
+[1]: https://rangers.urbanrivers.org/cameratrap
+[2]: {% post_url 2025-05-22-camera-trap-computer-vision %}
+[3]: {% post_url 2025-06-20-deploying-computer-vision %}
+[4]: {% post_url 2025-06-24-exploring-ai-vs-human-cameratraps %}
 
-[2]: https://rangers.urbanrivers.org/cameratrap

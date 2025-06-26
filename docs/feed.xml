@@ -1,116 +1,157 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-06-24T16:43:59-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
-</subtitle><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><entry><title type="html">Filtering 90% of blank wildife photos for a better UX</title><link href="http://localhost:4000/2025/06/27/filtering-90-pct-blank-wildlife.html" rel="alternate" type="text/html" title="Filtering 90% of blank wildife photos for a better UX" /><published>2025-06-27T00:00:00-05:00</published><updated>2025-06-27T00:00:00-05:00</updated><id>http://localhost:4000/2025/06/27/filtering-90-pct-blank-wildlife</id><content type="html" xml:base="http://localhost:4000/2025/06/27/filtering-90-pct-blank-wildlife.html"><![CDATA[<p>Our community wildlife classification/identification project is live at <a href="https://rangers.urbanrivers.org/cameratrap">rangers.urbanrivers.org</a>.<br />
-Using AI, we are massively fixing the boring part.</p>
-
-<p>Over the first 9 months, volunteers have labeled just over 60k images in our database (oct’24-jun’25).<br />
-Of these, ~46k were labeled blank and ~14k were labeled as containing at least one animal.<br />
-A human labeling rate of about 6.7k images per month with 77% of those being blanks.</p>
-
-<p>Extrapolating that number to the 200k+ images currently needing labels.. we could be looking at 154k blank images (😴). 
-At our labeling rate - ignoring exhausion - that should take another 21 months (almost 2 years) to complete. 
-Meanwhile we are still generating thousands of additional images.</p>
-
-<p>This post will describe how we’re making use of the speciesnet (and megadetector) results from the first pass through our dataset</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-06-26T12:14:15-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
+</subtitle><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><entry><title type="html">Comparing AI computer vision with Human Labeling - Wildlife Cameras</title><link href="http://localhost:4000/2025/06/24/exploring-ai-vs-human-cameratraps.html" rel="alternate" type="text/html" title="Comparing AI computer vision with Human Labeling - Wildlife Cameras" /><published>2025-06-24T00:00:00-05:00</published><updated>2025-06-24T00:00:00-05:00</updated><id>http://localhost:4000/2025/06/24/exploring-ai-vs-human-cameratraps</id><content type="html" xml:base="http://localhost:4000/2025/06/24/exploring-ai-vs-human-cameratraps.html"><![CDATA[<p>We have AI results and volunteer contributed human labels for approximately 60,000 images.<br />
+This post explores the relationships between human error and ai errors.</p>
 
 <p>Project Steps so far:</p>
+<ol>
+  <li><a href="/2025/05/22/camera-trap-computer-vision.html">Generate Speciesnet Inference on dev and then production images</a></li>
+  <li><a href="/2025/06/20/deploying-computer-vision.html">Try to fine-tune an imagenet model for a site specific classification system with limited data</a>
+    <ul>
+      <li>Explore results, classifications and confusion matrices</li>
+    </ul>
+  </li>
+  <li><strong>(linked below)</strong> <a href="#process-speciesnet-inferences-for-mongodb-upload">Process speciesnet inferences and append results to MongoDB records</a>
+    <ul>
+      <li><strong>(This post)</strong> Compare Humans vs AI in Tableau</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="process-speciesnet-inferences-for-mongodb-upload">Process speciesnet inferences for MongoDB upload</h2>
+<p>Essentially, we open the speciesnet inference json and extract detection confidences for each image.<br />
+For each <code class="language-plaintext highlighter-rouge">animal</code> and <code class="language-plaintext highlighter-rouge">human</code> detections we find the maximum - then for the max between both, we infer the <code class="language-plaintext highlighter-rouge">blank</code> probability. 
+Vehicles are default lumped into <code class="language-plaintext highlighter-rouge">blanks</code> and we have useful features for eventual filtering parameters.</p>
+
+<p>See the code in this repo: <a href="https://github.com/morescode-pm/mongo-ur-utils/blob/main/ai_results/ai_detection_parser.py">mongo-ur-utils</a></p>
+
+<h2 id="kaggle-notebook-for-etl">Kaggle notebook for ETL</h2>
+<p>Given that the MongoDB now has aiResults for all 200k+ images and human labels for around 60k, we can extract the relevant fields from each image (linked by a mediaID) and discover the relationships between them. For example:</p>
 <ul>
-  <li>
-    <ol>
-      <li>Generate Speciesnet Inference on dev and then production images
-        <ul>
-          <li>Explore results, classifications and detections</li>
-        </ul>
-      </li>
-    </ol>
-  </li>
-  <li>
-    <ol>
-      <li>Try to fine-tune an imagenet model for a site specific classification system with limited data
-        <ul>
-          <li>Explore results, classifications and confusion matrices</li>
-        </ul>
-      </li>
-    </ol>
-  </li>
-  <li>
-    <ol>
-      <li>Process speciesnet inferences and append results to MongoDB records
-        <ul>
-          <li>Compare Humans vs AI in Tableau</li>
-          <li><strong>(This post)</strong> - Implement aiResults filters for less human labeling fatigue.</li>
-        </ul>
-      </li>
-    </ol>
+  <li>If we were to implement a filter that removed low confidence animal detections, how many false negatives (ai missed the animal) would we be overlooking?</li>
+  <li>How many images in a high ai animal detection confidence have we labeled already?
+    <ul>
+      <li>What portion of these have 3 observations?</li>
+      <li>What default filter settings might be affecting this?</li>
+    </ul>
   </li>
 </ul>
 
-<p>Users have to identify animals - but most images are blank</p>
+<p>First we grab the relevant fields - both <code class="language-plaintext highlighter-rouge">speciesConsensus</code> and <code class="language-plaintext highlighter-rouge">aiResults</code> are arrays/dictionaries so we will have to further query those.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">query</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">"speciesConsensus.0"</span><span class="p">:</span> <span class="p">{</span><span class="s">"$exists"</span><span class="p">:</span> <span class="bp">True</span><span class="p">},</span>
+    <span class="s">"aiResults.0"</span><span class="p">:</span> <span class="p">{</span><span class="s">"$exists"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+    <span class="p">}</span>  <span class="c1"># records that have both only - drops nulls or missing
+</span><span class="n">projection</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">"_id"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s">"mediaID"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">"publicURL"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">"speciesConsensus"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">"aiResults"</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">}</span>
+<span class="n">all_obs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">collection</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">projection</span><span class="p">))</span>
+</code></pre></div></div>
 
-<p>Blank motion capture images happen when grass/leaves/wind sets off the sensor.</p>
+<p>This returns a observation json <code class="language-plaintext highlighter-rouge">obs_json</code> which we further flatten with:</p>
 
-<p>As is 90 % of our images are blanks.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># flatten list init
+</span><span class="n">flat_rows</span> <span class="o">=</span> <span class="p">[]</span>
 
-<p>We ran speciesnet on Kaggle
-We processed the output file to extract detections.</p>
+<span class="c1"># for each mediaID/item in obs_json
+</span><span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">obs_json</span><span class="p">:</span>
+    <span class="n">media_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'mediaID'</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'publicURL'</span><span class="p">)</span>
+    
+    <span class="c1"># Use first entry of speciesConsensus and aiResults
+</span>    <span class="c1"># Noting that speciesConsensus[0] is generally the animal consensus if there is one
+</span>    <span class="c1"># We could filter the results before extracting - but it's true enough for right now
+</span>    <span class="n">consensus</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'speciesConsensus'</span><span class="p">,</span> <span class="p">[{}])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ai</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'aiResults'</span><span class="p">,</span> <span class="p">[{}])[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">flat_rows</span><span class="p">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s">'mediaID'</span><span class="p">:</span> <span class="n">media_id</span><span class="p">,</span>
+        <span class="s">'publicURL'</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
+        <span class="s">'observationType'</span><span class="p">:</span> <span class="n">consensus</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'observationType'</span><span class="p">),</span>
+        <span class="s">'scientificName'</span><span class="p">:</span> <span class="n">consensus</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'scientificName'</span><span class="p">),</span>
+        <span class="s">'observationCount'</span><span class="p">:</span> <span class="n">consensus</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'observationCount'</span><span class="p">),</span>
+        <span class="s">'confBlank'</span><span class="p">:</span> <span class="n">ai</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'confBlank'</span><span class="p">),</span>
+        <span class="s">'confHuman'</span><span class="p">:</span> <span class="n">ai</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'confHuman'</span><span class="p">),</span>
+        <span class="s">'confAnimal'</span><span class="p">:</span> <span class="n">ai</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'confAnimal'</span><span class="p">),</span>
+    <span class="p">})</span>
+</code></pre></div></div>
 
-<p>We built filters to show only images with at least 75% chance of an animal first.</p>
+<p><code class="language-plaintext highlighter-rouge">flat_rows</code> can now be condensed into a dataframe and exported from here for further analysis.<br />
+<code class="language-plaintext highlighter-rouge">df = pd.DataFrame(flat_rows)</code></p>
 
-<p>Next Steps:</p>
+<p><img src="/assets/images/species-validation/df_export.png" /></p>
+
+<p>Kaggle notebook found <a href="https://www.kaggle.com/code/morescope/speciesnet-validation">here</a>.</p>
+
+<h2 id="tableau-for-eda">Tableau for EDA</h2>
+<p>Exploring the dataset further, I built a dashboard to visualize things like:</p>
 <ul>
-  <li>
-    <ol>
-      <li>Reinforcment model training - Using complementary approaches for curating and fine tuning models</li>
-    </ol>
+  <li><strong>What do images look like where the ai thought there was an animal but people marked blank?</strong> (human false negatives)<br />
+<img src="/assets/images/species-validation/ai-found-animal.png" /></li>
+</ul>
+
+<p>There are human false negatives that ai would not have missed. This probably happens by mistake when people are reviewing multiple images with some lag between load times. There was no filter on number of observations - so some of the human false negatives would eventually bubble up as more observations are made on the same image by multiple people.</p>
+
+<ul>
+  <li><strong>What do images look like where the ai thought it was blank, but people marked an animal?</strong> (ai false negatives)<br />
+<img src="/assets/images/species-validation/ai-missed-animal.png" /></li>
+</ul>
+
+<p>There clearly are some images that people can see better than ai - but also some human false positives.</p>
+
+<ul>
+  <li><strong>Are there any particular species that the ai has a hard time detecting?</strong> (ai false negatives by class)
+    <ul>
+      <li>This portion of the table looks at the 50% probability odds with the aiResults filter with at least 100 images labeled.</li>
+    </ul>
+
+    <p><img src="/assets/images/species-validation/hard-times.png" /></p>
   </li>
 </ul>
 
-<p>Using speciesnet inference to source images (done)
-Using early imagenet/pytorch classification to source images (todo)</p>
+<p>The worst losses happen in rattus norvegicus (brown rats), Aves (unspecified bird), Myomorpha (unspecified rodent), and Sylvilagus floridanus (rabbits). Keeping in mind these are not ‘deleted’ images but instead images that could be ignored in preference of accelerating others.</p>
 
-<p>Confirming sourced images and repetitive rounds of cleaning + fine tuning  (todo)</p>
-
-<p>SpeciesNet was described by Gadot et al.<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></p>
-
-<div class="footnotes" role="doc-endnotes">
-  <ol>
-    <li id="fn:1" role="doc-endnote">
-      <p>Gadot, T., Istrate, Ș., Kim, H., Morris, D., Beery, S., Birch, T., &amp; Ahumada, J. (2024). <em>To crop or not to crop: Comparing whole-image and cropped classification on a large dataset of camera trap images.</em> IET Computer Vision. Wiley Online Library. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
-  </ol>
-</div>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="computervision" /><category term="ux" /><category term="ui" /><category term="node" /><category term="vercel" /><category term="mongodb" /><category term="jules" /><summary type="html"><![CDATA[Our community wildlife classification/identification project is live at rangers.urbanrivers.org. Using AI, we are massively fixing the boring part.]]></summary></entry><entry><title type="html">Comparing AI computer vision with Human Labeling - Wildlife Cameras</title><link href="http://localhost:4000/2025/06/24/exploring-ai-vs-human-cameratraps.html" rel="alternate" type="text/html" title="Comparing AI computer vision with Human Labeling - Wildlife Cameras" /><published>2025-06-24T00:00:00-05:00</published><updated>2025-06-24T00:00:00-05:00</updated><id>http://localhost:4000/2025/06/24/exploring-ai-vs-human-cameratraps</id><content type="html" xml:base="http://localhost:4000/2025/06/24/exploring-ai-vs-human-cameratraps.html"><![CDATA[<p>Project Steps so far:</p>
 <ul>
-  <li>
-    <ol>
-      <li>Generate Speciesnet Inference on dev and then production images
-        <ul>
-          <li>Explore results, classifications and detections</li>
-        </ul>
-      </li>
-    </ol>
-  </li>
-  <li>
-    <ol>
-      <li>Try to fine-tune an imagenet model for a site specific classification system with limited data
-        <ul>
-          <li>Explore results, classifications and confusion matrices</li>
-        </ul>
-      </li>
-    </ol>
-  </li>
-  <li>
-    <ol>
-      <li>Process speciesnet inferences and append results to MongoDB records
-        <ul>
-          <li><strong>(This post)</strong> Compare Humans vs AI in Tableau</li>
-        </ul>
-      </li>
-    </ol>
+  <li><strong>What threshold would remove the most true blanks without accientally removing images with animal in them?</strong> (ai sensitivity)
+    <ul>
+      <li>These tables show the cumulative percentage where human labeled an animal (has animal) vs 5% bins of SpeciesNet confidence of an animal detection.</li>
+    </ul>
+
+    <div style="display: flex; gap: 10px;">
+  <img src="/assets/images/species-validation/counts-at-zero.png" style="width: 30%;" />
+  <img src="/assets/images/species-validation/counts-at-75.png" style="width: 30%;" />
+</div>
   </li>
 </ul>
 
-<p>Kaggle notebook for EDA</p>
+<p>Already at just 5% probability of an animal - there’s an effective removal of 82.55% of blank images labeled by humans that would be filtered out.<br />
+That’s huge! We’re aiming at focusing on the most likely images with animals in them by setting a filter of 75% minimum confAnimal default - at that level that would remove 99.45% of blanks people are labeling - true blanks where nothing was in the image.</p>
 
-<p>Tableau for EDA</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="tableau" /><category term="speciesnet" /><category term="pandas" /><summary type="html"><![CDATA[Project Steps so far: Generate Speciesnet Inference on dev and then production images Explore results, classifications and detections Try to fine-tune an imagenet model for a site specific classification system with limited data Explore results, classifications and confusion matrices Process speciesnet inferences and append results to MongoDB records (This post) Compare Humans vs AI in Tableau]]></summary></entry><entry><title type="html">Deploying a computer vision model</title><link href="http://localhost:4000/2025/06/20/deploying-computer-vision.html" rel="alternate" type="text/html" title="Deploying a computer vision model" /><published>2025-06-20T00:00:00-05:00</published><updated>2025-06-20T00:00:00-05:00</updated><id>http://localhost:4000/2025/06/20/deploying-computer-vision</id><content type="html" xml:base="http://localhost:4000/2025/06/20/deploying-computer-vision.html"><![CDATA[<p>Training and publishing a computer vision model on the web.</p>
+<p>At 75% - this does come at a cost of up to 47.7% of the images people have labeld as containing an animal (some false positives) would be initially filtered out.
+At 5% - that false negative cost drops to 19.79% in our sample. We’ll use these statistics to determine how to apply a filter to the user experience on rangers.urbanrivers.com.</p>
+
+<p>.</p>
+
+<p>Here’s a <a href="https://public.tableau.com/app/profile/paul.moresco/viz/URHumansvsAICameratraps/HumanLabels#1">link to the dashboard</a>, also embedded below.</p>
+
+<h2 id="tableau-dashboard--">Tableau Dashboard -</h2>
+<h1 id="ur-humans-vs-ai-cameratraps">UR Humans vs AI Cameratraps</h1>
+<script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+
+<style>
+  #vizWrapper {
+    width: 100%;
+    height: 500px;
+  }
+</style>
+
+<div id="vizWrapper">
+  <tableau-viz id="tableauViz" src="https://public.tableau.com/views/URHumansvsAICameratraps/HumanLabels" toolbar="bottom">
+  </tableau-viz>
+</div>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="tableau" /><category term="speciesnet" /><category term="pandas" /><category term="ETL" /><summary type="html"><![CDATA[We have AI results and volunteer contributed human labels for approximately 60,000 images. This post explores the relationships between human error and ai errors.]]></summary></entry><entry><title type="html">Deploying a computer vision model</title><link href="http://localhost:4000/2025/06/20/deploying-computer-vision.html" rel="alternate" type="text/html" title="Deploying a computer vision model" /><published>2025-06-20T00:00:00-05:00</published><updated>2025-06-20T00:00:00-05:00</updated><id>http://localhost:4000/2025/06/20/deploying-computer-vision</id><content type="html" xml:base="http://localhost:4000/2025/06/20/deploying-computer-vision.html"><![CDATA[<p>Training and publishing a computer vision model on the web.</p>
 <h4 id="try-it-here">Try It Here!</h4>
 <ul>
   <li><a href="/hfapi">🧪 Lightweight JavaScript demo</a></li>
@@ -167,7 +208,7 @@ The <code class="language-plaintext highlighter-rouge">aug_transforms()</code> u
 
 <p><img src="/assets/images/fastai-deploy/2-dls-batch.png" /></p>
 
-<p>I decided to try Resnet18 - because that’s in the example for the fastai documentation (#overly-honest-methods).<br />
+<p>I decided to try ResNet18 - because that’s in the example for the fastai documentation (#overly-honest-methods).<br />
 Training started to converge at 5 epochs, so for the sake of iteration in the future I stopped there.  Here’s the confusion matrix from only 26 images each (5 held for validation). Not bad! - clearly some issues with blanks, sandpipers and ducks but that has to be expected with the small dataset.</p>
 
 <p><img src="/assets/images/fastai-deploy/classify.png" /></p>
@@ -203,7 +244,7 @@ To iterate and improve here’s a short list of what to do first.</p>
 <h2 id="update">Update</h2>
 <p>The original dataloaders object was being passed “Resize(224)” - this was doing a center crop and removing the target species sometimes. By adding Resize(224, method=’squish’) and a class for cropping the top and bottom - this was resolved while also removing the cameratrap overlays.</p>
 
-<p>This, plus checking timm for state of the art models and switching to convnext_tiny improved the error rate from 22% to 11%!</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="fastai" /><category term="html" /><category term="js" /><category term="gradio" /><category term="computervision" /><category term="huggingface" /><summary type="html"><![CDATA[Training and publishing a computer vision model on the web. Try It Here! 🧪 Lightweight JavaScript demo 🚀 Full-featured Gradio app]]></summary></entry><entry><title type="html">Building a Webapp for Species Geofencing</title><link href="http://localhost:4000/2025/06/07/species-geofence.html" rel="alternate" type="text/html" title="Building a Webapp for Species Geofencing" /><published>2025-06-07T00:00:00-05:00</published><updated>2025-06-07T00:00:00-05:00</updated><id>http://localhost:4000/2025/06/07/species-geofence</id><content type="html" xml:base="http://localhost:4000/2025/06/07/species-geofence.html"><![CDATA[<p>One of the issues we experienced with speciesnet classification was results where the species was not valid for our location. In speciesnet - specifying a geofence coordinate will cause missclassifications to move up to the highest level hierarchy - in most cases, this classifies an animal as “animal.”</p>
+<p>This, plus checking timm for state of the art models and switching to ConvNeXt_tiny improved the error rate from 22% to 11%!</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="fastai" /><category term="html" /><category term="js" /><category term="gradio" /><category term="computervision" /><category term="CNN" /><category term="huggingface" /><summary type="html"><![CDATA[Training and publishing a computer vision model on the web. Try It Here! 🧪 Lightweight JavaScript demo 🚀 Full-featured Gradio app]]></summary></entry><entry><title type="html">Building a Webapp for Species Geofencing</title><link href="http://localhost:4000/2025/06/07/species-geofence.html" rel="alternate" type="text/html" title="Building a Webapp for Species Geofencing" /><published>2025-06-07T00:00:00-05:00</published><updated>2025-06-07T00:00:00-05:00</updated><id>http://localhost:4000/2025/06/07/species-geofence</id><content type="html" xml:base="http://localhost:4000/2025/06/07/species-geofence.html"><![CDATA[<p>One of the issues we experienced with speciesnet classification was results where the species was not valid for our location. In speciesnet - specifying a geofence coordinate will cause missclassifications to move up to the highest level hierarchy - in most cases, this classifies an animal as “animal.”</p>
 
 <p>So, to help validate lists of species relevant to our area, I built a <a href="https://morescode-pm.github.io/geofence-polygon/">webapp for looking up species</a>.
 <a href="https://morescode-pm.github.io/geofence-polygon/" target="_blank">
