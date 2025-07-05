@@ -6,7 +6,8 @@ title: Deploying a computer vision model
 ---
 Training and publishing a computer vision model on the web.
 #### Try It Here!
-- [🧪 Lightweight JavaScript demo]({{ "/hfapi" | relative_url }})
+- [🧪 Lightweight JavaScript demo]({{ "/hfapi" | relative_url }})  
+{you may need to visit the gradio/huggingface link below to wake up the app if it has been a while}
 - [🚀 Full-featured Gradio app](https://huggingface.co/spaces/morescode-pm/urbanrivers-camtraps)
 
 ### Table of Contents
