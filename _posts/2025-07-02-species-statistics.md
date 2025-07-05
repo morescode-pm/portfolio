@@ -1,14 +1,14 @@
 ---
 layout: post
-tags: [python, jules, tableau, deeplearning, pandas]
+tags: [python, jules, tableau, deeplearning, pandas, matplotlib]
 title: Chicago wildlife species analysis - a starting point
 
 ---
 
 After improving the species classification model to a point where we can start to trust its predictions - we ran it on 71k+ images where speciesnet predicted at least 5% likely containing an animal.
 
-This sample was used as an (error prone) dataset for an analysis starting point.
-<img src="/assets/images/start-analytics/biod-ot.png">
+This sample was used as an (error prone) dataset for an analysis starting point. The figure here represents statistics on biodiversity over time - but is subject to error and bias described below.  
+<a href="/assets/images/start-analytics/biod-ot.png"><img src="/assets/images/start-analytics/biod-ot.png"></a>
 
 
 **`A quick note about bias before we go much futher -` the number of images, number of deployements, and trends displayed are completely subject to how, where, and when we deployed cameras. Since we aren't putting every camera in the same spots all the time, for example: it's entirely possible that a decrease or increase in species presence is because a camera was not in the location where they were previously observed. Cameras also lose battery power, sd cards fill up, and leaves/plants grow to block the view - so exact statistics will be hard to know.  
@@ -44,18 +44,18 @@ it's ok to leave them empty.
 This got us 99% of the way there - only a few code review changes later (like it was generating ids instead of leaving things blank) - we had an operating means of accessing our data in a very structured format.  
 
 For context on our monthly data - here are the counts of images and deployments in the relative 2024 year...
-<img src="/assets/images/start-analytics/n-images.png">
-<img src="/assets/images/start-analytics/n-deploy.png">
-<img src="/assets/images/start-analytics/nimg-pdep.png">
+<a href="/assets/images/start-analytics/n-images.png"><img src="/assets/images/start-analytics/n-images.png"></a>
+<a href="/assets/images/start-analytics/n-deploy.png"><img src="/assets/images/start-analytics/n-deploy.png"></a>
+<a href="/assets/images/start-analytics/nimg-pdep.png"><img src="/assets/images/start-analytics/nimg-pdep.png"></a>
 
 ### Time basis analysis
 I had a conversation with the lead research scientist at the Urban Rivers and he mentioned interest in understanding the day/night patterns of behavior. "Are animal behaviors different based on light sources available at night?" To start to understand this, I was curious about plotting abundance in species by time of day. 
 
 As a timeseries...  
-<img src="/assets/images/start-analytics/time-warmcold.png">
+<a href="/assets/images/start-analytics/time-warmcold.png"><img src="/assets/images/start-analytics/time-warmcold.png"></a>
 
 vs. as radar plots (cool grey area = night time roughly)...
-<img src="/assets/images/start-analytics/radar-warmcold.png">
+<a href="/assets/images/start-analytics/radar-warmcold.png"><img src="/assets/images/start-analytics/radar-warmcold.png"></a>
 
 A few interesting patterns show up - and some obvious ones, like where nocturnal species (opossum, raccoon, rat, rabbits, coyote, night heron) are actually captured on camera at night (again, biased by where we have cameras set up).  
 
@@ -70,14 +70,15 @@ Species variety and abudance are key metrics to understand biodiversity. For thi
     - Unique/Distinct species captured on camera in a given month/year
         - We grouped birds and turtles from diverse classes to fewer classes for the sake of model training, so the actual diversity is under-reported.
 2. Shannon Diversity Index (aka H') \( H = -\sum p_i \ln(p_i) \)
+    - p_i is the proportion of any species across all species - so the count/total_count per month
     - Based on information theory about uncertainty - looking at any one species in a community, what is the probability of guessing what it is? If a community has only one species, the uncertainty is 0 - however, if diversity is high, the uncertainty is high.
     - Calculated in [this article][4]
     - [Described here][5]
-3. Shannon Equitability Index - 
-    - Takes the diversity and divides by the natural log of the number of unique species \(E_h = H /ln(S)\)
+3. Shannon Equitability Index - \( E_h = H /ln(S) \)
+    - Takes the diversity and divides by the natural log of the number of unique species (S)
     - A value of 1 is very diverse, 0 is not.
 
-<img src="/assets/images/start-analytics/biod-ot.png">
+<a href="/assets/images/start-analytics/biod-ot.png"><img src="/assets/images/start-analytics/biod-ot.png"></a>
 
 
 
