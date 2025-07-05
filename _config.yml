@@ -45,6 +45,7 @@ include:
 
 exclude:
   - zzzTODO_LIST.txt
+  - README.md
 
 paginate: 4
 paginate_path: "/page/:num"
