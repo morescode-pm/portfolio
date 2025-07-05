@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-07-04T19:15:28-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-07-05T09:28:43-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
 </subtitle><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><entry><title type="html">Chicago wildlife species analysis - a starting point</title><link href="http://localhost:4000/2025/07/02/species-statistics.html" rel="alternate" type="text/html" title="Chicago wildlife species analysis - a starting point" /><published>2025-07-02T00:00:00-05:00</published><updated>2025-07-02T00:00:00-05:00</updated><id>http://localhost:4000/2025/07/02/species-statistics</id><content type="html" xml:base="http://localhost:4000/2025/07/02/species-statistics.html"><![CDATA[<p>After improving the species classification model to a point where we can start to trust its predictions - we ran it on 71k+ images where speciesnet predicted at least 5% likely containing an animal.</p>
 
 <p>This sample was used as an (error prone) dataset for an analysis starting point. The figure here represents statistics on biodiversity over time - but is subject to error and bias described below.<br />
@@ -120,10 +120,10 @@ SpeciesNet (based on EfficientNet) uses MegaDetector (based on YOLOv5) to detect
 <p>When we ran speciesnet through our 200k+ images - approximately 90 % of our images showed up as total blanks (an confAnimal of 0.0). Based on initial validation of speciesnet vs human labels - this is likely at least 80% true blanks. So, while there is an argument for observed blanks vs passive assumed blanks, this represents an enormous bulk of VERY boring images to look at.</p>
 
 <h3 id="step-1-process-speciesnet-inferences-for-mongodb-upload">Step 1. Process speciesnet inferences for MongoDB upload</h3>
-<p>Just like exploring the data in our last post - we open the speciesnet inference json and extract detection confidences for each image.<br />
-The confidences are then uploaded to mongodb through some python script.</p>
+<p>Just like exploring the data in our last post - we open the speciesnet inference json and extract detection confidences for each image.  See the parsing script here: <a href="https://github.com/morescode-pm/mongo-ur-utils/blob/main/ai_results/ai_detection_parser.py">mongo-ur-utils/ai_results/ai_detection_parser.py</a></p>
 
-<p>See the code in this repo: <a href="https://github.com/morescode-pm/mongo-ur-utils/blob/main/ai_results/ai_mongo_operations.py">mongo-ur-utils</a></p>
+<p>The confidences are then uploaded to mongodb through some python script.
+See the upload script here: <a href="https://github.com/morescode-pm/mongo-ur-utils/blob/main/ai_results/ai_mongo_operations.py">mongo-ur-utils/ai_results/ai_mongo_operations.py</a></p>
 
 <h3 id="step-2-building-a-filter-in-an-existing-repo">Step 2. Building a Filter in an existing Repo</h3>
 <p>Enter Jules - google’s async coding agent hero to the rescue. I’m not a node developer, but I do have a very good idea of what we want and how to test the systems.
@@ -154,7 +154,7 @@ Here's the structure of one of the mongo records for example:
 
 <p>Here’s what it looks like -</p>
 
-<p><img src="/assets/images/filtering-start/before-and-after.png" /></p>
+<p><a href="/assets/images/filtering-start/before-and-after.png"><img src="/assets/images/filtering-start/before-and-after.png" /></a></p>
 
 <p>Based on previous analysis, we chose  to show only images with at least 75% chance of an animal as the first default.</p>
 

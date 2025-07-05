@@ -33,10 +33,10 @@ SpeciesNet (based on EfficientNet) uses MegaDetector (based on YOLOv5) to detect
 When we ran speciesnet through our 200k+ images - approximately 90 % of our images showed up as total blanks (an confAnimal of 0.0). Based on initial validation of speciesnet vs human labels - this is likely at least 80% true blanks. So, while there is an argument for observed blanks vs passive assumed blanks, this represents an enormous bulk of VERY boring images to look at.
 
 ### Step 1. Process speciesnet inferences for MongoDB upload 
-Just like exploring the data in our last post - we open the speciesnet inference json and extract detection confidences for each image.  
-The confidences are then uploaded to mongodb through some python script.
+Just like exploring the data in our last post - we open the speciesnet inference json and extract detection confidences for each image.  See the parsing script here: [mongo-ur-utils/ai_results/ai_detection_parser.py][8]
 
-See the code in this repo: [mongo-ur-utils][7]
+The confidences are then uploaded to mongodb through some python script.
+See the upload script here: [mongo-ur-utils/ai_results/ai_mongo_operations.py][7]
 
 
 ### Step 2. Building a Filter in an existing Repo
@@ -69,7 +69,7 @@ In the end, a fully functional modification to the already existing get request 
 
 Here's what it looks like - 
 
-<img src="/assets/images/filtering-start/before-and-after.png">  
+<a href="/assets/images/filtering-start/before-and-after.png"><img src="/assets/images/filtering-start/before-and-after.png"></a>  
 
 
 Based on previous analysis, we chose  to show only images with at least 75% chance of an animal as the first default.  
@@ -99,3 +99,4 @@ Without any real plans or order yet:
 [5]: https://wildmile-git-fork-morescode-pm-feat-ai-filters-urbanrivers.vercel.app/cameratrap/identify
 [6]: https://github.com/nkwsy/Wildmile/pull/271
 [7]: https://github.com/morescode-pm/mongo-ur-utils/blob/main/ai_results/ai_mongo_operations.py
+[8]: https://github.com/morescode-pm/mongo-ur-utils/blob/main/ai_results/ai_detection_parser.py
