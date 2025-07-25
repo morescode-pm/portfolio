@@ -1,8 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-07-24T19:06:55-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
-</subtitle><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><entry><title type="html">Building Tools for Better Experiments</title><link href="http://localhost:4000/2025/07/25/doe-hero.html" rel="alternate" type="text/html" title="Building Tools for Better Experiments" /><published>2025-07-25T00:00:00-05:00</published><updated>2025-07-25T00:00:00-05:00</updated><id>http://localhost:4000/2025/07/25/doe-hero</id><content type="html" xml:base="http://localhost:4000/2025/07/25/doe-hero.html"><![CDATA[<p>Started with building a class off of an open source DOE library (credit that library)
-Built pyQT app - show screenshot</p>
-
-<p>Built Streamlit App wiht Windsurf &amp; knowledge of what to ask</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="jules" /><category term="tableau" /><category term="deeplearning" /><category term="pandas" /><category term="matplotlib" /><summary type="html"><![CDATA[Started with building a class off of an open source DOE library (credit that library) Built pyQT app - show screenshot]]></summary></entry><entry><title type="html">Learning NLP through steam game reviews</title><link href="http://localhost:4000/2025/07/13/steam-games-nlp.html" rel="alternate" type="text/html" title="Learning NLP through steam game reviews" /><published>2025-07-13T00:00:00-05:00</published><updated>2025-07-13T00:00:00-05:00</updated><id>http://localhost:4000/2025/07/13/steam-games-nlp</id><content type="html" xml:base="http://localhost:4000/2025/07/13/steam-games-nlp.html"><![CDATA[<p>There are over 100,000 games in the Steam catalog and 132 million monthly active users (MAUs).
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-07-24T19:09:15-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
+</subtitle><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><entry><title type="html">Learning NLP through steam game reviews</title><link href="http://localhost:4000/2025/07/13/steam-games-nlp.html" rel="alternate" type="text/html" title="Learning NLP through steam game reviews" /><published>2025-07-13T00:00:00-05:00</published><updated>2025-07-13T00:00:00-05:00</updated><id>http://localhost:4000/2025/07/13/steam-games-nlp</id><content type="html" xml:base="http://localhost:4000/2025/07/13/steam-games-nlp.html"><![CDATA[<p>There are over 100,000 games in the Steam catalog and 132 million monthly active users (MAUs).
 Users are allowed to leave reviews and votes (thumbs up or thumbs down) about games after purchasing.</p>
 
 <p>It would be interesting if AI could predict the vote based on the review text - let’s see what happens!</p>
@@ -1050,4 +1047,618 @@ The goal was to create a performance reporting dashboard for a company that woul
   _Report Title
   _Scatter Title
   _Waterfall Title</li>
-</ul>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="powerbi" /><category term="dax" /><summary type="html"><![CDATA[Plant Co. Performance Dashboard. An example dataset from a fake company that sells real plants. The dashboard is interactive, so please click through to satisfy your curiosity (tip: the embedded dashboard can be resized to fit your full screen in the lower right corner).]]></summary></entry></feed>
+</ul>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="powerbi" /><category term="dax" /><summary type="html"><![CDATA[Plant Co. Performance Dashboard. An example dataset from a fake company that sells real plants. The dashboard is interactive, so please click through to satisfy your curiosity (tip: the embedded dashboard can be resized to fit your full screen in the lower right corner).]]></summary></entry><entry><title type="html">Analyzing Camera Trap Pictures with AI</title><link href="http://localhost:4000/2025/05/22/camera-trap-computer-vision.html" rel="alternate" type="text/html" title="Analyzing Camera Trap Pictures with AI" /><published>2025-05-22T00:00:00-05:00</published><updated>2025-05-22T00:00:00-05:00</updated><id>http://localhost:4000/2025/05/22/camera-trap-computer-vision</id><content type="html" xml:base="http://localhost:4000/2025/05/22/camera-trap-computer-vision.html"><![CDATA[<p>Using SpeciesNet (Google AI) to sort through hundreds of thousands of wildlife pictures from motion detection cameras (camera traps).</p>
+
+<h3 id="skip-to-the-good-part">Skip to the good part:</h3>
+<p>Preview page created using Megadetector dev-tools on a subset of predictions.<br />
+<a href="https://morescode-pm.github.io/urbanrivers-speciesnet-preview/">Urban Rivers - CamTrap AI Observations</a></p>
+
+<p><a href="#obligatory-example-of-good-classification">A good example of successfull <strong>Great Blue Heron</strong> classification</a></p>
+
+<h3 id="project-workflow">Project Workflow</h3>
+<ol>
+  <li>Process Images through the <code class="language-plaintext highlighter-rouge">SpeciesNet</code> Deep Learning Computer Vision Model.</li>
+  <li>Associate inferences back to images via md5 hash - Data Cleaning.</li>
+  <li>Explore Dataset - EDA.</li>
+  <li>Plan for model fine-tuning &amp; next steps.</li>
+</ol>
+
+<h3 id="notebook-for-processing-images-on-kaggle">Notebook for processing images on <a href="https://www.kaggle.com/code/morescope/urbanrivers-speciesnet-hash-clean-full-nogeo">Kaggle</a>:</h3>
+<iframe src="/assets/notebooks/html/ur-speciesnet-v2.html" width="100%" height="400" style="border:1px solid #ccc; border-radius:8px;"></iframe>
+<p>The notebook took 10 hours to run - 7 hours of which was just spent on downloading and resizing images. This is why I used batching and multi-threading for the images, but yet it still takes a while to go through 100k s3 links. Surely there’s a better way.</p>
+
+<h3 id="data-cleaning-and-eda">Data Cleaning and EDA</h3>
+<p>Our primary goal with image classification - before releasing a model - is to confirm that predictions are “accurate enough”. This generally takes shape by having a holdout set of images with known (human graded) classes the ai doesn’t have access to. In our situation, we don’t have this quite yet - images are being labeled and classifications are on the production server - but the speciesnet ensemble doesn’t yet have a fine-tuning or base truth approach listed.</p>
+
+<p>Ultimately this would let us “vote” on identifying species in photos using AI.</p>
+
+<p>Since this is the first time we’re trying speciesnet, we’re going to do a few spot checks and EDA of the generated inference (predicted animals in photo) to understand how it performs.</p>
+
+<h4 id="cleaning">Cleaning</h4>
+<p>After running the model we are left with a very long json file of 100k+ classifications and a pre-assembled [html pages][1] site through using <code class="language-plaintext highlighter-rouge">megadetector-utils</code> 
+Here’s an example of the structure for one image where a great blue heron was classified:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"filepath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/batch_5/bada276600ce2790b1d2877e7d6e7a25.jpg"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"classifications"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"classes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"96fe1a07-7ef1-4a2f-99e1-ec2c9a78b532;aves;pelecaniformes;ardeidae;ardea;herodias;great blue heron"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"bfa75aeb-3187-48fe-95b9-f171465cc984;aves;pelecaniformes;ardeidae;ardea;cocoi;cocoi heron"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"b1352069-a39c-4a84-a949-60044271c0c1;aves;;;;;bird"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"f8db21f0-6b79-4444-8be4-b87906d56e6a;aves;pelecaniformes;ardeidae;ardea;albus;great egret"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"1110460b-7f99-405b-a9b0-65a09ecccca1;aves;pelecaniformes;ardeidae;tigrisoma;lineatum;rufescent tiger-heron"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"scores"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="mf">0.7359567880630493</span><span class="p">,</span><span class="w">
+        </span><span class="mf">0.07253273576498032</span><span class="p">,</span><span class="w">
+        </span><span class="mf">0.04953608289361</span><span class="p">,</span><span class="w">
+        </span><span class="mf">0.03795544430613518</span><span class="p">,</span><span class="w">
+        </span><span class="mf">0.008134812116622925</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"detections"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"animal"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"conf"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8977401256561279</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
+        </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
+        </span><span class="mf">0.3460410535335541</span><span class="p">,</span><span class="w">
+        </span><span class="mf">0.9453125</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"prediction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"96fe1a07-7ef1-4a2f-99e1-ec2c9a78b532;aves;pelecaniformes;ardeidae;ardea;herodias;great blue heron"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"prediction_score"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7359567880630493</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"prediction_source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"classifier"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"model_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4.0.1a"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre></div></div>
+<p>First, we need to extract data from the JSON file into a dataframe so we can more easily parse through some questions. Looking at the JSON structure, we need the filepath, a paired list of the classifications and their scores, and a paired list of any detections and their scores. Speciesnet does ultimately give us a prediction inference based on a taxonomic hierarchy decision set, but to learn more, we want the full dataset minus some very low confidence prections. My preference for this step is to stick to pure python for parsing - aiming to create a list of dicts for generating a dataframe. In my opinion, this is a lot easier to read than the jargon in the pandas library for extraction.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">_CONF</span> <span class="o">=</span> <span class="mf">0.3</span> <span class="c1"># Master Setting for confidence or score threshold
+</span>
+<span class="c1"># Function for pairing classification and score
+</span><span class="k">def</span> <span class="nf">get_high_score_classes</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">_CONF</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[{</span><span class="s">"score"</span><span class="p">:</span> <span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">score</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">'</span><span class="p">,</span> <span class="s">"class"</span><span class="p">:</span> <span class="n">cls</span><span class="p">}</span> <span class="k">for</span> <span class="n">score</span><span class="p">,</span> <span class="n">cls</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">classes</span><span class="p">)</span> <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">]</span>
+
+<span class="c1"># Function for pairing detection and score
+</span><span class="k">def</span> <span class="nf">get_high_conf_detections</span><span class="p">(</span><span class="n">detections</span><span class="p">,</span> <span class="n">target_label</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">_CONF</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[(</span><span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">det</span><span class="p">[</span><span class="s">"conf"</span><span class="p">]</span><span class="si">:</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">'</span><span class="p">,</span> <span class="n">det</span><span class="p">[</span><span class="s">"label"</span><span class="p">])</span> <span class="k">for</span> <span class="n">det</span> <span class="ow">in</span> <span class="n">detections</span> <span class="k">if</span> <span class="n">det</span><span class="p">[</span><span class="s">"label"</span><span class="p">]</span> <span class="o">==</span> <span class="n">target_label</span> <span class="ow">and</span> <span class="n">det</span><span class="p">[</span><span class="s">"conf"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">]</span>
+
+<span class="c1"># Staged Configuration
+</span><span class="n">master_data</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Open and loop over json file
+</span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">master_json</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s">"predictions"</span><span class="p">]:</span>
+        <span class="n">high_score_classes</span> <span class="o">=</span> <span class="n">get_high_score_classes</span><span class="p">(</span>
+            <span class="n">image</span><span class="p">[</span><span class="s">"classifications"</span><span class="p">][</span><span class="s">"scores"</span><span class="p">],</span>
+            <span class="n">image</span><span class="p">[</span><span class="s">"classifications"</span><span class="p">][</span><span class="s">"classes"</span><span class="p">],</span>
+            <span class="n">_CONF</span>
+        <span class="p">)</span>
+        <span class="n">master_data</span><span class="p">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s">"imageName"</span><span class="p">:</span> <span class="n">image</span><span class="p">[</span><span class="s">"filepath"</span><span class="p">].</span><span class="n">split</span><span class="p">(</span><span class="s">"/"</span><span class="p">)[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="s">"nDetections_animal"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">get_high_conf_detections</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="s">"detections"</span><span class="p">],</span> <span class="s">"animal"</span><span class="p">,</span> <span class="n">_CONF</span><span class="p">)),</span>
+            <span class="s">"nDetections_human"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">get_high_conf_detections</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="s">"detections"</span><span class="p">],</span> <span class="s">"human"</span><span class="p">,</span> <span class="n">_CONF</span><span class="p">)),</span>
+            <span class="s">"nDetections_vehicle"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">get_high_conf_detections</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="s">"detections"</span><span class="p">],</span> <span class="s">"vehicle"</span><span class="p">,</span> <span class="n">_CONF</span><span class="p">)),</span>
+            <span class="s">"nClassifications"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">high_score_classes</span><span class="p">),</span>
+            <span class="s">"highScoreClasses"</span><span class="p">:</span> <span class="n">high_score_classes</span>
+
+        <span class="p">})</span>
+
+<span class="c1"># Previous work identified 55363 as our heron example index - 
+</span><span class="n">display</span><span class="p">(</span><span class="n">master_data</span><span class="p">[</span><span class="mi">55363</span><span class="p">])</span>
+
+</code></pre></div></div>
+<p>This script processes all 100k+ predictions in about 7 seconds, extracting a preferable starting point for EDA.<br />
+The heron example:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="s">'imageName'</span><span class="p">:</span> <span class="s">'bada276600ce2790b1d2877e7d6e7a25.jpg'</span><span class="p">,</span>
+ <span class="s">'nDetections_animal'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+ <span class="s">'nDetections_human'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+ <span class="s">'nDetections_vehicle'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+ <span class="s">'nClassifications'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+ <span class="s">'highScoreClasses'</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="s">'score'</span><span class="p">:</span> <span class="s">'0.74'</span><span class="p">,</span>
+    <span class="s">'class'</span><span class="p">:</span> <span class="s">'96fe1a07-7ef1-4a2f-99e1-ec2c9a78b532;aves;pelecaniformes;ardeidae;ardea;herodias;great blue heron'</span>
+ <span class="p">}]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>From here it’s very simple to just define the dataframe as <code class="language-plaintext highlighter-rouge">df = pd.DataFrame(master_data)</code></p>
+
+<p>Next, we want to make sure that each row in our dataframe contains exactly one class prediction. This step is important because if an image has more than one classification above our threshold, while we’re ok with having more than one classification per image (sometimes there are more than 1 species in a photo!), we want to know the high score classification(s) in each photo.</p>
+
+<p>For example:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imageName</span><span class="p">:</span> <span class="s">'269ed4dcbaf7419a1d00e6957ff2beff.jpg'</span>
+<span class="n">highScoreClasses</span><span class="p">:</span>
+  <span class="p">[</span>
+    <span class="p">{</span><span class="s">'score'</span><span class="p">:</span> <span class="s">'0.57'</span><span class="p">,</span> <span class="s">'class'</span><span class="p">:</span> <span class="s">'f1856211-cfb7-4a5b-9158-c0f72fd09ee6;;;;;;blank'</span><span class="p">},</span>
+    <span class="p">{</span><span class="s">'score'</span><span class="p">:</span> <span class="s">'0.37'</span><span class="p">,</span> <span class="s">'class'</span><span class="p">:</span> <span class="s">'d372cda5-a8ca-4b7b-97ed-4e4fab9c9b4b;mammalia;cetartiodactyla;suidae;sus;scrofa;wild boar'</span><span class="p">}</span>
+  <span class="p">]</span>
+</code></pre></div></div>
+
+<p>With <code class="language-plaintext highlighter-rouge">df2 = df.explode("highScoreClasses", ignore_index=True)</code> turns into:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imageName</span><span class="p">:</span> <span class="s">'269ed4dcbaf7419a1d00e6957ff2beff.jpg'</span>
+<span class="n">highScoreClasses</span><span class="p">:</span>
+  <span class="p">[</span>
+    <span class="p">{</span><span class="s">'score'</span><span class="p">:</span> <span class="s">'0.57'</span><span class="p">,</span> <span class="s">'class'</span><span class="p">:</span> <span class="s">'f1856211-cfb7-4a5b-9158-c0f72fd09ee6;;;;;;blank'</span><span class="p">}</span>
+  <span class="p">]</span>
+<span class="n">imageName</span><span class="p">:</span> <span class="s">'269ed4dcbaf7419a1d00e6957ff2beff.jpg'</span>
+<span class="n">highScoreClasses</span><span class="p">:</span>
+  <span class="p">[</span>
+    <span class="p">{</span><span class="s">'score'</span><span class="p">:</span> <span class="s">'0.37'</span><span class="p">,</span> <span class="s">'class'</span><span class="p">:</span> <span class="s">'d372cda5-a8ca-4b7b-97ed-4e4fab9c9b4b;mammalia;cetartiodactyla;suidae;sus;scrofa;wild boar'</span><span class="p">}</span>
+  <span class="p">]</span>
+</code></pre></div></div>
+<p>This increased our row count from 104937 to 107535</p>
+
+<p>Now we’re going to parse that very long taxonomic string into the common name ‘most specific’ name that occupies the last item in the semicolon separated list. This is a very long line of code - but, chatGPT helped puzzle through it and we’re going to use it.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Split by ';' and take the last part
+</span><span class="n">df2</span><span class="p">[</span><span class="s">'class'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[</span><span class="s">'highScoreClasses'</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'class'</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="bp">None</span><span class="p">).</span><span class="nb">str</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">";"</span><span class="p">).</span><span class="nb">str</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>Last, we want to re-associate some of the data originally pulled for the predictions - namely the datetime and the publicURL for each image. To do that we will merge the predictions with the metadata - both files were downloaded as CSVs at this stage or early on in the process and can be linked via the unique mediaID (a simple parse of the imageName).</p>
+
+<p><code class="language-plaintext highlighter-rouge">merged_df = pd.merge(metadata, predicts, on="mediaID", how="inner")</code></p>
+
+<p>After running this the first time, the merged_df had a few hundred more rows than the predictions dataset - so, the metadata probably has duplicated media ids. This is pretty normal because the image uploading process doesn’t include deduplication. So, before the merge I added <code class="language-plaintext highlighter-rouge">metadata_unique = metadata.drop_duplicates(subset=['mediaID'])</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">merged_df = pd.merge(metadata_unique, predicts, on="mediaID", how="inner")</code></p>
+
+<p>Selecting our needed columns gives us:</p>
+
+<h4 id="cleaned-data">Cleaned Data</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>mediaID</th>
+      <th>timestamp</th>
+      <th>publicURL</th>
+      <th>folderName</th>
+      <th>animal</th>
+      <th>human</th>
+      <th>vehicle</th>
+      <th>class</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>113f9bb5…39b0</td>
+      <td>2024-12-25 15:29:24</td>
+      <td>https://urbanriverrangers…SYFW01868.jpg</td>
+      <td>2025-01-04_UR027</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>human</td>
+    </tr>
+    <tr>
+      <td>871315ba…d6de</td>
+      <td>2024-12-25 15:29:24</td>
+      <td>https://urbanriverrangers…SYFW01869.jpg</td>
+      <td>2025-01-04_UR027</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>human</td>
+    </tr>
+    <tr>
+      <td>991baede…a9db</td>
+      <td>2024-12-25 15:29:24</td>
+      <td>https://urbanriverrangers…SYFW01870.jpg</td>
+      <td>2025-01-04_UR027</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>human</td>
+    </tr>
+    <tr>
+      <td>32c8912b…f68c</td>
+      <td>2024-12-25 15:29:26</td>
+      <td>https://urbanriverrangers…SYFW01871.jpg</td>
+      <td>2025-01-04_UR027</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>blank</td>
+    </tr>
+    <tr>
+      <td>f4ba4a3d…8d0a</td>
+      <td>2024-12-25 15:29:26</td>
+      <td>https://urbanriverrangers…SYFW01872.jpg</td>
+      <td>2025-01-04_UR027</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>blank</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="exploratory-analysis">Exploratory Analysis</h4>
+<p>First let’s just get a list of the top 20 classifications and graph it - there is an overwhelming number of blanks - so we’re going to use a log-scale.<br />
+<img src="/assets/images/ai-part-one/6_bargraph_freq.png" />
+..and by the numbers:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Class</th>
+      <th>Count</th>
+      <th>%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>blank</td>
+      <td>90475</td>
+      <td>84.1</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>bird</td>
+      <td>6122</td>
+      <td>5.7</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>human</td>
+      <td>4499</td>
+      <td>4.2</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>western pond turtle</td>
+      <td>1886</td>
+      <td>1.8</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>mallard</td>
+      <td>818</td>
+      <td>0.76</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>anseriformes order</td>
+      <td>588</td>
+      <td>0.55</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>american coot</td>
+      <td>299</td>
+      <td>0.28</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>domestic dog</td>
+      <td>161</td>
+      <td>0.15</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>northern raccoon</td>
+      <td>151</td>
+      <td>0.14</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>reptile</td>
+      <td>150</td>
+      <td>0.14</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>great blue heron</td>
+      <td>128</td>
+      <td>0.12</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>vehicle</td>
+      <td>109</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>eastern cottontail</td>
+      <td>82</td>
+      <td>0.076</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>wild turkey</td>
+      <td>68</td>
+      <td>0.063</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>domestic cattle</td>
+      <td>66</td>
+      <td>0.061</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>wood duck</td>
+      <td>53</td>
+      <td>0.049</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>brown rat</td>
+      <td>50</td>
+      <td>0.046</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>white-tailed deer</td>
+      <td>43</td>
+      <td>0.040</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>central american agouti</td>
+      <td>41</td>
+      <td>0.038</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>domestic cat</td>
+      <td>38</td>
+      <td>0.035</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>An overwhelming 84% of the images are blanks according to speciesnet. Given probably more than a few of these are just false negatives, but still - it mirror’s what we’ve been experiencing in labeling activities: a whole lot of boring.</p>
+
+<p>For completeness - let’s also look at the least frequent 20. Most of these are ties because they are n=1:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Class</th>
+      <th>Count</th>
+      <th>%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>65</td>
+      <td>rattus species</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>66</td>
+      <td>greater roadrunner</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>67</td>
+      <td>scaly ground-roller</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>68</td>
+      <td>merle dyal malgache</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>69</td>
+      <td>red acouchi</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>70</td>
+      <td>blood pheasant</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>71</td>
+      <td>white-lipped peccary</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>72</td>
+      <td>red fox</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>73</td>
+      <td>desert cottontail</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>74</td>
+      <td>rufescent tiger-heron</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>75</td>
+      <td>common wombat</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>76</td>
+      <td>african elephant</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>77</td>
+      <td>bearded pig</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>78</td>
+      <td>eastern chipmunk</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>79</td>
+      <td>fossa</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>80</td>
+      <td>l’hoest’s monkey</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>81</td>
+      <td>house rat</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>82</td>
+      <td>bobcat</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>83</td>
+      <td>nine-banded armadillo</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <td>84</td>
+      <td>guenther’s dik-dik</td>
+      <td>1</td>
+      <td>0.001</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>There are clearly some errors in classification. This run of the model was run without any geofencing to avoid collapsing low classification confidences into a higher “animal” taxonomy level. Probably a large portion of these would not exist. Increasing our _CONF threshold to &gt;0.80 reduced our species counts to 27 for example instead of 84. Unfortunately playing with this value drops some true detections in favor of having none at all - we will explore this type of decision more after we have an opportunity for fine-tuning.</p>
+
+<p>Another popular angle in conservation is looking for patterns in usage by time of day. Here’s a chart for the top 10 classes and all of our pictures.<br />
+This could be further subsetted into seasons but for this first pass we are just getting an understanding.</p>
+
+<p><img src="/assets/images/ai-part-one/7_timeofday.png" /></p>
+
+<p>There are definiely nocturnal patterns already emerging in a “we aren’t totally confident it got it right all that often” dataset.<br />
+For example, we see humans follow a normal bell curve pattern of visitation, dogs seem to spike in the morning, noon, and evening (for walkies I hope), and species like cottontails and raccoons show up when the lights go out and nobody is around.</p>
+
+<p>Same plot but with a shared y-axis:</p>
+
+<p><img src="/assets/images/ai-part-one/8_timeofday_sharey.png" /></p>
+
+<p>Here we get a sense of who we’re sharing the wild mile with: birds and turtles (not western pond turtles, but we’ll fix that soon)</p>
+
+<p>The full cleaning and eda notebook is embedded in all of its’ <a href="https://github.com/morescode-pm/urbanrivers-speciesnet-preview/blob/store-and-combine-predicts/runs/full-no-geo/eda-predict-full-no-geo.ipynb">chaotic glory here</a>:</p>
+
+<h4 id="obligatory-example-of-good-classification">Obligatory example of good classification</h4>
+<p><a href="#skip-to-the-good-part">Link back to top</a></p>
+<div style="max-width: 900px; display: flex; flex-wrap: wrap; gap: 10px;">
+    <div style="flex: 1 0 30%; text-align: left;">
+        <div style="margin-top: 4px; font-size: 12px; color: #ccc">2024-06-27_UR011| class: great blue heron</div>
+        <a href="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-06-27_UR011/DCIM/101MEDIA/SYFW0478.JPG" target="_blank">
+            <img src="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-06-27_UR011/DCIM/101MEDIA/SYFW0478.JPG" style="max-width: 100%; height: auto; max-height: 150px; border: 1px solid #ccc;" />
+        </a>
+    </div>
+    
+    <div style="flex: 1 0 30%; text-align: left;">
+        <div style="margin-top: 4px; font-size: 12px; color: #ccc">2024-06-27_UR011| class: great blue heron</div>
+        <a href="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-06-27_UR011/DCIM/100MEDIA/SYFW4008.JPG" target="_blank">
+            <img src="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-06-27_UR011/DCIM/100MEDIA/SYFW4008.JPG" style="max-width: 100%; height: auto; max-height: 150px; border: 1px solid #ccc;" />
+        </a>
+    </div>
+    
+    <div style="flex: 1 0 30%; text-align: left;">
+        <div style="margin-top: 4px; font-size: 12px; color: #ccc">2024-06-27_UR011| class: great blue heron</div>
+        <a href="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-06-27_UR011/DCIM/100MEDIA/SYFW3285.JPG" target="_blank">
+            <img src="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-06-27_UR011/DCIM/100MEDIA/SYFW3285.JPG" style="max-width: 100%; height: auto; max-height: 150px; border: 1px solid #ccc;" />
+        </a>
+    </div>
+    
+    <div style="flex: 1 0 30%; text-align: left;">
+        <div style="margin-top: 4px; font-size: 12px; color: #ccc">2024-06-27_UR011| class: great blue heron</div>
+        <a href="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-06-27_UR011/DCIM/100MEDIA/SYFW3099.JPG" target="_blank">
+            <img src="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-06-27_UR011/DCIM/100MEDIA/SYFW3099.JPG" style="max-width: 100%; height: auto; max-height: 150px; border: 1px solid #ccc;" />
+        </a>
+    </div>
+    
+    <div style="flex: 1 0 30%; text-align: left;">
+        <div style="margin-top: 4px; font-size: 12px; color: #ccc">2024-10-12_UR005| class: great blue heron</div>
+        <a href="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-10-12_UR005/DCIM/100DSCIM/PICT0534.JPG" target="_blank">
+            <img src="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-10-12_UR005/DCIM/100DSCIM/PICT0534.JPG" style="max-width: 100%; height: auto; max-height: 150px; border: 1px solid #ccc;" />
+        </a>
+    </div>
+    
+    <div style="flex: 1 0 30%; text-align: left;">
+        <div style="margin-top: 4px; font-size: 12px; color: #ccc">2024-06-27_UR011| class: great blue heron</div>
+        <a href="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-06-27_UR011/DCIM/101MEDIA/SYFW0467.JPG" target="_blank">
+            <img src="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-06-27_UR011/DCIM/101MEDIA/SYFW0467.JPG" style="max-width: 100%; height: auto; max-height: 150px; border: 1px solid #ccc;" />
+        </a>
+    </div>
+    
+    <div style="flex: 1 0 30%; text-align: left;">
+        <div style="margin-top: 4px; font-size: 12px; color: #ccc">2024-09-08_UR011| class: great blue heron</div>
+        <a href="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-09-08_UR011/DCIM/100MEDIA/SYFW5409.JPG" target="_blank">
+            <img src="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-09-08_UR011/DCIM/100MEDIA/SYFW5409.JPG" style="max-width: 100%; height: auto; max-height: 150px; border: 1px solid #ccc;" />
+        </a>
+    </div>
+    
+    <div style="flex: 1 0 30%; text-align: left;">
+        <div style="margin-top: 4px; font-size: 12px; color: #ccc">2024-10-12_UR005| class: great blue heron</div>
+        <a href="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-10-12_UR005/DCIM/100DSCIM/PICT0389.JPG" target="_blank">
+            <img src="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-10-12_UR005/DCIM/100DSCIM/PICT0389.JPG" style="max-width: 100%; height: auto; max-height: 150px; border: 1px solid #ccc;" />
+        </a>
+    </div>
+    
+    <div style="flex: 1 0 30%; text-align: left;">
+        <div style="margin-top: 4px; font-size: 12px; color: #ccc">2024-09-08_UR011| class: great blue heron</div>
+        <a href="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-09-08_UR011/DCIM/100MEDIA/SYFW4971.JPG" target="_blank">
+            <img src="https://urbanriverrangers.s3.amazonaws.com/images/2024/2024-09-08_UR011/DCIM/100MEDIA/SYFW4971.JPG" style="max-width: 100%; height: auto; max-height: 150px; border: 1px solid #ccc;" />
+        </a>
+    </div>
+</div>
+
+<h3 id="next-steps">Next Steps</h3>
+<p>Overall, we succeeded in using the SpeciesNet ensemble released by google. We were able to generate over 100k predictions for our camera trap images, and parse those predictions into a useable structure for analysis and validation.</p>
+
+<p>The first attempts at this used a gps geofence parameter and full resolution images. We seemed to have better luck by resizing the images before inference - something that speciesnet does also do - but perhaps the two stage downsampling of the images led to a more familiar (lower resolution) image like those used for training initially.</p>
+
+<p>The next step I’m excited about involve learning how to deploy this model to huggingface through gradio &amp; then, after getting human graded image ids, working on fine tuning SpeciesNet to our image types.</p>
+
+<p>The goal here is to reduce the boring parts of image labeling - something MegaDetector and SpeciesNet did excellently.</p>
+
+<p>To get started on parsing the false positive (species who don’t belong) I build a webapp to interact with gbif data.
+This is something you can both <a href="https://morescode-pm.github.io/geofence-polygon/">use here</a>.<br />
+And <a href="/2025/06/07/species-geofence.html">read about here</a>.</p>
+
+<p>SpeciesNet was described by Gadot et al.<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></p>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>Gadot, T., Istrate, Ș., Kim, H., Morris, D., Beery, S., Birch, T., &amp; Ahumada, J. (2024). <em>To crop or not to crop: Comparing whole-image and cropped classification on a large dataset of camera trap images.</em> IET Computer Vision. Wiley Online Library. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="deeplearning" /><category term="computervision" /><category term="opencv" /><category term="ai" /><category term="conservation" /><summary type="html"><![CDATA[Using SpeciesNet (Google AI) to sort through hundreds of thousands of wildlife pictures from motion detection cameras (camera traps).]]></summary></entry></feed>
