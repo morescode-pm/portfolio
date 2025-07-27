@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Learning NLP through steam game reviews | MORESCODE ANALYTICS LLC</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Learning NLP through steam game reviews" />
+<meta name="author" content="Paul Moresco" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="There are over 100,000 games in the Steam catalog and 132 million monthly active users (MAUs). Users are allowed to leave reviews and votes (thumbs up or thumbs down) about games after purchasing." />
+<meta property="og:description" content="There are over 100,000 games in the Steam catalog and 132 million monthly active users (MAUs). Users are allowed to leave reviews and votes (thumbs up or thumbs down) about games after purchasing." />
+<link rel="canonical" href="http://localhost:4000/2025/07/13/steam-games-nlp.html" />
+<meta property="og:url" content="http://localhost:4000/2025/07/13/steam-games-nlp.html" />
+<meta property="og:site_name" content="MORESCODE ANALYTICS LLC" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-13T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Learning NLP through steam game reviews" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Paul Moresco"},"dateModified":"2025-07-13T00:00:00-05:00","datePublished":"2025-07-13T00:00:00-05:00","description":"There are over 100,000 games in the Steam catalog and 132 million monthly active users (MAUs). Users are allowed to leave reviews and votes (thumbs up or thumbs down) about games after purchasing.","headline":"Learning NLP through steam game reviews","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2025/07/13/steam-games-nlp.html"},"url":"http://localhost:4000/2025/07/13/steam-games-nlp.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="MORESCODE ANALYTICS LLC" />
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">MORESCODE ANALYTICS LLC</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/about/">About</a>
+  <a class="nav-item" href="/portfolio.html">Portfolio</a>
+</div>
+      </nav>
+  </div>
+</header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="post"><h1 class="page-heading" style="text-align: center;">Learning NLP through steam game reviews</h1><div class="post-meta" style="text-align: center; color: #666; margin-bottom: 1.5em;">
+    Jul 13, 2025&nbsp;-&nbsp;<span class="post-tag" style="color: teal">#python</a>, <span class="post-tag" style="color: teal">#nlp</a>, <span class="post-tag" style="color: teal">#kaggle</a>, <span class="post-tag" style="color: teal">#deeplearning</a>, <span class="post-tag" style="color: teal">#pandas</a>, <span class="post-tag" style="color: teal">#huggingface</a>, <span class="post-tag" style="color: teal">#transformers</a>, <span class="post-tag" style="color: teal">#gameanalytics</a></div>
+
+  <div class="post-content">
+    <p>There are over 100,000 games in the Steam catalog and 132 million monthly active users (MAUs).
+Users are allowed to leave reviews and votes (thumbs up or thumbs down) about games after purchasing.</p>
+
+<p>It would be interesting if AI could predict the vote based on the review text - let’s see what happens!</p>
+
+<h2 id="introduction">Introduction</h2>
+<p>This started out as a want to understand more about ML sentiment analysis - but by the time I was introduced to NLP, the context was around fine-tuning a model to be able to predict / minimize / maximize a target statistic. So, following the fastai book - and peaking at the data available through various Steam APIs. This project focused on predicting the thumbs-up vs. thumbs-down binary based on the user’s review</p>
+
+<h2 id="downloading-reviews-through-apis">Downloading reviews through APIs</h2>
+<p>I found two APIs for this project:</p>
+<ul>
+  <li>A public API sourced through <a href="https://steamspy.com/api.php">steamspy.com</a></li>
+  <li>A private API sourced directly through the <a href="https://partner.steamgames.com/doc/store/getreviews">Steam API</a> that requires a user API Key.</li>
+</ul>
+
+<p>The key lat links both sources together is the “<code class="language-plaintext highlighter-rouge">appid</code>” &lt;- a unique id from steam that represents the game. Since there are so many games and we don’t need all of the data from all of them, I wanted to try with only the top 100 games. So, the steps in order to get the data we need are:</p>
+<ol>
+  <li>Request the top 100 games from the last 2 weeks from steamspy -&gt; returns the <code class="language-plaintext highlighter-rouge">appid</code>, name, and a variety of other information about the games.
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="err">'appid':</span><span class="w"> </span><span class="mi">730</span><span class="p">,</span><span class="w">
+ </span><span class="err">'name':</span><span class="w"> </span><span class="err">'Counter-Strike:</span><span class="w"> </span><span class="err">Global</span><span class="w"> </span><span class="err">Offensive'</span><span class="p">,</span><span class="w">
+ </span><span class="err">'developer':</span><span class="w"> </span><span class="err">'Valve'</span><span class="p">,</span><span class="w">
+ </span><span class="err">'publisher':</span><span class="w"> </span><span class="err">'Valve'</span><span class="p">,</span><span class="w">
+ </span><span class="err">'score_rank':</span><span class="w"> </span><span class="err">''</span><span class="p">,</span><span class="w">
+ </span><span class="err">'positive':</span><span class="w"> </span><span class="mi">7642084</span><span class="p">,</span><span class="w">
+ </span><span class="err">'negative':</span><span class="w"> </span><span class="mi">1173003</span><span class="p">,</span><span class="w">
+ </span><span class="err">'userscore':</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+ </span><span class="err">'owners':</span><span class="w"> </span><span class="err">'</span><span class="mi">100</span><span class="p">,</span><span class="mi">000</span><span class="p">,</span><span class="mi">000</span><span class="w"> </span><span class="err">..</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="mi">000</span><span class="p">,</span><span class="mi">000</span><span class="err">'</span><span class="p">,</span><span class="w">
+ </span><span class="err">'average_forever':</span><span class="w"> </span><span class="mi">31031</span><span class="p">,</span><span class="w">
+ </span><span class="err">'average_</span><span class="mi">2</span><span class="err">weeks':</span><span class="w"> </span><span class="mi">837</span><span class="p">,</span><span class="w">
+ </span><span class="err">'median_forever':</span><span class="w"> </span><span class="mi">5370</span><span class="p">,</span><span class="w">
+ </span><span class="err">'median_</span><span class="mi">2</span><span class="err">weeks':</span><span class="w"> </span><span class="mi">326</span><span class="p">,</span><span class="w">
+ </span><span class="err">'price':</span><span class="w"> </span><span class="err">'</span><span class="mi">0</span><span class="err">'</span><span class="p">,</span><span class="w">
+ </span><span class="err">'initialprice':</span><span class="w"> </span><span class="err">'</span><span class="mi">0</span><span class="err">'</span><span class="p">,</span><span class="w">
+ </span><span class="err">'discount':</span><span class="w"> </span><span class="err">'</span><span class="mi">0</span><span class="err">'</span><span class="p">,</span><span class="w">
+ </span><span class="err">'ccu':</span><span class="w"> </span><span class="mi">1013936</span><span class="p">,</span><span class="w">
+ </span><span class="err">'languages':</span><span class="w"> </span><span class="err">'English</span><span class="p">,</span><span class="w"> </span><span class="err">Czech</span><span class="p">,</span><span class="w"> </span><span class="err">Danish</span><span class="p">,</span><span class="w"> </span><span class="err">Dutch</span><span class="p">,</span><span class="w"> </span><span class="err">Finnish</span><span class="p">,</span><span class="w"> </span><span class="err">French</span><span class="p">,</span><span class="w"> </span><span class="err">German</span><span class="p">,</span><span class="w"> </span><span class="err">Hungarian</span><span class="p">,</span><span class="w"> </span><span class="err">Italian</span><span class="p">,</span><span class="w"> </span><span class="err">Japanese</span><span class="p">,</span><span class="w"> </span><span class="err">Korean</span><span class="p">,</span><span class="w"> </span><span class="err">Norwegian</span><span class="p">,</span><span class="w"> </span><span class="err">Polish</span><span class="p">,</span><span class="w"> </span><span class="err">Portuguese</span><span class="w"> </span><span class="err">-</span><span class="w"> </span><span class="err">Portugal</span><span class="p">,</span><span class="w"> </span><span class="err">Portuguese</span><span class="w"> </span><span class="err">-</span><span class="w"> </span><span class="err">Brazil</span><span class="p">,</span><span class="w"> </span><span class="err">Romanian</span><span class="p">,</span><span class="w"> </span><span class="err">Russian</span><span class="p">,</span><span class="w"> </span><span class="err">Simplified</span><span class="w"> </span><span class="err">Chinese</span><span class="p">,</span><span class="w"> </span><span class="err">Spanish</span><span class="w"> </span><span class="err">-</span><span class="w"> </span><span class="err">Spain</span><span class="p">,</span><span class="w"> </span><span class="err">Swedish</span><span class="p">,</span><span class="w"> </span><span class="err">Thai</span><span class="p">,</span><span class="w"> </span><span class="err">Traditional</span><span class="w"> </span><span class="err">Chinese</span><span class="p">,</span><span class="w"> </span><span class="err">Turkish</span><span class="p">,</span><span class="w"> </span><span class="err">Bulgarian</span><span class="p">,</span><span class="w"> </span><span class="err">Ukrainian</span><span class="p">,</span><span class="w"> </span><span class="err">Greek</span><span class="p">,</span><span class="w"> </span><span class="err">Spanish</span><span class="w"> </span><span class="err">-</span><span class="w"> </span><span class="err">Latin</span><span class="w"> </span><span class="err">America</span><span class="p">,</span><span class="w"> </span><span class="err">Vietnamese</span><span class="p">,</span><span class="w"> </span><span class="err">Indonesian'</span><span class="p">,</span><span class="w">
+ </span><span class="err">'genre':</span><span class="w"> </span><span class="err">'Action</span><span class="p">,</span><span class="w"> </span><span class="err">Free</span><span class="w"> </span><span class="err">To</span><span class="w"> </span><span class="err">Play'</span><span class="p">,</span><span class="w">
+ </span><span class="err">'tags':</span><span class="w"> </span><span class="p">{</span><span class="err">'FPS':</span><span class="w"> </span><span class="mi">91172</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Shooter':</span><span class="w"> </span><span class="mi">65634</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Multiplayer':</span><span class="w"> </span><span class="mi">62536</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Competitive':</span><span class="w"> </span><span class="mi">53536</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Action':</span><span class="w"> </span><span class="mi">47634</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Team-Based':</span><span class="w"> </span><span class="mi">46549</span><span class="p">,</span><span class="w">
+  </span><span class="err">'e-sports':</span><span class="w"> </span><span class="mi">43682</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Tactical':</span><span class="w"> </span><span class="mi">41468</span><span class="p">,</span><span class="w">
+  </span><span class="err">'First-Person':</span><span class="w"> </span><span class="mi">39540</span><span class="p">,</span><span class="w">
+  </span><span class="err">'PvP':</span><span class="w"> </span><span class="mi">34587</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Online</span><span class="w"> </span><span class="err">Co-Op':</span><span class="w"> </span><span class="mi">34056</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Co-op':</span><span class="w"> </span><span class="mi">30342</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Strategy':</span><span class="w"> </span><span class="mi">30189</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Military':</span><span class="w"> </span><span class="mi">28762</span><span class="p">,</span><span class="w">
+  </span><span class="err">'War':</span><span class="w"> </span><span class="mi">28060</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Difficult':</span><span class="w"> </span><span class="mi">26037</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Trading':</span><span class="w"> </span><span class="mi">25813</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Realistic':</span><span class="w"> </span><span class="mi">25497</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Fast-Paced':</span><span class="w"> </span><span class="mi">25369</span><span class="p">,</span><span class="w">
+  </span><span class="err">'Moddable':</span><span class="w"> </span><span class="mi">6667</span><span class="p">}}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li>Loop through each <code class="language-plaintext highlighter-rouge">appid</code> and submit a request to the Steam API for the reviews on the store page.</li>
+</ol>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="err">'recommendationid':</span><span class="w"> </span><span class="err">'</span><span class="mi">199808702</span><span class="err">'</span><span class="p">,</span><span class="w">
+ </span><span class="err">'author':</span><span class="w"> </span><span class="p">{</span><span class="err">'steamid':</span><span class="w"> </span><span class="err">'</span><span class="mi">76561199829955378</span><span class="err">'</span><span class="p">,</span><span class="w">
+  </span><span class="err">'num_games_owned':</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="err">'num_reviews':</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="err">'playtime_forever':</span><span class="w"> </span><span class="mi">2335</span><span class="p">,</span><span class="w">
+  </span><span class="err">'playtime_last_two_weeks':</span><span class="w"> </span><span class="mi">1300</span><span class="p">,</span><span class="w">
+  </span><span class="err">'playtime_at_review':</span><span class="w"> </span><span class="mi">1348</span><span class="p">,</span><span class="w">
+  </span><span class="err">'last_played':</span><span class="w"> </span><span class="mi">1753305341</span><span class="p">},</span><span class="w">
+ </span><span class="err">'language':</span><span class="w"> </span><span class="err">'english'</span><span class="p">,</span><span class="w">
+ </span><span class="err">'review':</span><span class="w"> </span><span class="err">'yes'</span><span class="p">,</span><span class="w">
+ </span><span class="err">'timestamp_created':</span><span class="w"> </span><span class="mi">1752524911</span><span class="p">,</span><span class="w">
+ </span><span class="err">'timestamp_updated':</span><span class="w"> </span><span class="mi">1752524911</span><span class="p">,</span><span class="w">
+ </span><span class="err">'voted_up':</span><span class="w"> </span><span class="err">True</span><span class="p">,</span><span class="w">
+ </span><span class="err">'votes_up':</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+ </span><span class="err">'votes_funny':</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+ </span><span class="err">'weighted_vote_score':</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+ </span><span class="err">'comment_count':</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+ </span><span class="err">'steam_purchase':</span><span class="w"> </span><span class="err">True</span><span class="p">,</span><span class="w">
+ </span><span class="err">'received_for_free':</span><span class="w"> </span><span class="err">False</span><span class="p">,</span><span class="w">
+ </span><span class="err">'written_during_early_access':</span><span class="w"> </span><span class="err">False</span><span class="p">,</span><span class="w">
+ </span><span class="err">'primarily_steam_deck':</span><span class="w"> </span><span class="err">False</span><span class="p">}</span><span class="w">
+
+</span></code></pre></div></div>
+<p>In the example pasted here - from the most popular game “<code class="language-plaintext highlighter-rouge">Counter Strike</code>” - the review text is just “<code class="language-plaintext highlighter-rouge">yes</code>”. Voted_up = <code class="language-plaintext highlighter-rouge">True</code> is the boolean. …… Not a whooole lot to work with here. This is going to be challenging.</p>
+
+<p>Note I later saw that the steamspy api does offer tags, genres, price, and score_rank data – a potential future source for predictive analytics.</p>
+
+<h2 id="messy-data-solutions">Messy data solutions</h2>
+<p>The first issue I ran into was the absolute chaos of reviews about video games from internet strangers. There’s almost no filter at all. 
+If there’s going to be any chance of relating information between what someone says and what they vote, then the information source has to at least be coherent.</p>
+
+<p>To give you an idea of the reviews that exist on a random pull.</p>
+<ul>
+  <li>“1” -&gt; Voted down</li>
+  <li>This game makes you wanna stub your face 10/10 -&gt; Voted up</li>
+  <li>yes -&gt; Voted up</li>
+  <li>emoji for thumbs up -&gt; Voted up</li>
+  <li>Harika -&gt; Voted up</li>
+</ul>
+
+<p>Now, with the reviews, the steam api also returns a useful field called “<code class="language-plaintext highlighter-rouge">weighted vote score</code>” - a “helpfullness” score they calculate based on the number of upvotes a review gets - and the likelihood that it’s just spam. A value between 0 to 1 where most reviews are rated 0.5 to start. Trying to require this score to be above 0.6 resulted in a 90% removal of all reviews downloaded on the first pass. 🪦🪦🪦</p>
+
+<p>So, I set in motion another request from Steam that took a lot longer to process- this time only downloading reviews the met the following criteria:</p>
+<ul>
+  <li>weighted_vote_score &gt;= 0.51 ( at least a shot of not being spam )</li>
+  <li>english letters and characters only (some people mark english but then write in different languages)</li>
+  <li>review is at least more than 10 characters and has at least 2 words</li>
+</ul>
+
+<p>By comparison - where the first random 1000 reviews took about 30 seconds to request, this filtered list took 10 minutes.<br />
+Conclusion: There’s a LOT of junk reviews on steam ( in hindsight this is obvious )</p>
+
+<p>Here’s a view of the cleaned - non spammy - reviews:
+<img src="/assets/images/steam-nlp/1-filtered-reviews.png" /></p>
+
+<p>To be honest, I’m not even sure I totally solved the issue - and this is where my interest in fine tuning started to wear thin. If I ever come back to this data it will be to see if some more sophisticated model can just infer the sentiment for me.</p>
+
+<h2 id="memory-issues">Memory issues</h2>
+<p>The second issue I ran into with NLP was filling up the memory of the GPU / VM I was using on kaggle.<br />
+The steps to discover this included the core information about NLP.</p>
+
+<p>For this project I used the huggingface transformers libraries. These convert text into numbers by having a huge dictionary of words already pre-assigned to some value. This is how NLP works - computers are just running CNN type math problems trying to optimize the combination of numbers that leads to the final goal.  “Do a bunch of math to convert this sequence of numbers (that used to be words) into a final number close to my target.”  This is a process called “tokenization”</p>
+
+<p>Each model has its own tokenizer - for this project I used microsoft/deberta-v3-small on a recommendation.<br />
+Here’s what deberta-v3-small tokenizing looks like:</p>
+
+<p><img src="/assets/images/steam-nlp/2-tokenizing.png" /></p>
+
+<p>It does well with normal text, but cannot handle gibberish or foreign characters very well at all (it just converts them to characters)</p>
+
+<p>Some reviews being thousands of characters long - this can turn into a memory overload issue, FAST. So - to clean up one more time, I decided to limit reviews to those with only 49 characters or less. Tokenizing short reviews is better than long ones.</p>
+
+<p><code class="language-plaintext highlighter-rouge">('TEXT1: cs go forever', [1, 54453, 435, 294, 2285, 268, 424, 3629, 2])</code></p>
+
+<h2 id="a-much-smaller-prediction-subset">A much smaller prediction subset</h2>
+<p>From this point - the dataset (basically a dataframe but the kind used for huggingface transformers) can get split into portions for training and.. trained!<br />
+The transformers terminology does get a bit confusing though - training and testing are for training, eval is for testing, and the parameter eval is for training testing. It’s a zoo. Someone should fix it.</p>
+
+<p>Either way - the model ran with this smaller memory load and did - ~ok. The reviews were an unballanced (real) classification problem with many more upvotes than downvotes. The precision and recall statistics reflect this:</p>
+
+<p><img src="/assets/images/steam-nlp/3-report.png" /></p>
+
+<p>As a reminder (TP = true positive, FP = false positive, FN = false negative):</p>
+
+<p>Precision = How many of the predicted class were actually part of that class.<br />
+1’s ex: TP / TP + FP = 93% -&gt; When I predict an upvote, I’m right 93% of the time.</p>
+
+<p>Recall = How many of the actual class did I catch?<br />
+0’s ex: TP / TP + FN = 60% -&gt; I caught 60% of all the downvotes.</p>
+
+<p>Accuracy = What fraction of the total predictions were correct?<br />
+ex: TP + TN / TP + TN + FP + FN = 89.6% -&gt; The model is right 89.6% of the time</p>
+
+<p>Accuracy is good for balanced datasets,<br />
+Precision is good for avoiding false alarms,<br />
+Recall is good for catching all positives.</p>
+
+<h2 id="the-notebook">The notebook</h2>
+<p>Here’s a link to the kaggle notebook where you too can see/experience the struggles in learning NLP :D<br />
+<a href="https://www.kaggle.com/code/morescope/nlp-steam">https://www.kaggle.com/code/morescope/nlp-steam</a></p>
+
+
+  </div>
+</div>
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/"></data>
+
+  <div class="wrapper">
+    <div class="footer-row" style="text-align: center;"><div class="footer-author" style="margin-bottom: 8px;">
+          <span class="p-name">&copy; 2025 Paul Moresco </span>&nbsp;|&nbsp;
+            <a class="u-email" href="mailto:hello@morescode-analytics.com">hello@morescode-analytics.com</a></div><div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/morescode-pm" target="_blank" title="GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://www.linkedin.com/in/paul-moresco" target="_blank" title="Linkedin">
+      <span class="grey fa-brands fa-linkedin fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://www.kaggle.com/morescope/" target="_blank" title="Kaggle">
+      <span class="grey fa-brands fa-kaggle fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://public.tableau.com/app/profile/paul.moresco/vizzes" target="_blank" title="Tableau Public">
+      <span class="grey fa-brands fa-salesforce fa-lg"></span>
+    </a>
+  </li>
+</ul></div>
+    </div>
+  </div>
+</footer></body>
+
+</html>
