@@ -28,7 +28,7 @@ Then to configure your reddit connection after installing via pip, do:
 reddit = praw.Reddit(
     client_id=<your-client-id>,
     client_secret=<your-client-secret>,
-    user_agent="hellofresh_scraper by u/<your-username>"
+    user_agent="<your-app-name> by u/<your-username>"
 )
 ```
 
