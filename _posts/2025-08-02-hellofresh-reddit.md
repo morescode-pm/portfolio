@@ -8,7 +8,7 @@ title: How does r/hellofresh feel about hellofresh?
 I started interviewing for hellofresh recently. Part of the job posting listed 'experience with unstructured data' - so I decided to take a look at the sentiment in the subreddit r/hellofresh about.. hellofresh!
 
 Here's an image of the recent reddit 'hot' 1000 posts from r/hellofresh:  
-<img src="/assets/images/reddit-hellofresh/1-avg-sentiment.png">  
+<img src="/assets/images/reddit-hellofresh/0-dirtydata.png">  
 
 Keep reading to see how this changes when we clean the sentiment analysis results and explore different estimates of centrality.
 
