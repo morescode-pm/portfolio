@@ -169,13 +169,13 @@ As a third pass, now including any score that's slightly negative (selftext_comp
 
 #### Issues: 
 - Something about their accounts being canceled or box credits
-- Something about a recipe for a spicy chicken dish (enchiladas maybe)
-- Something about weekly options
-- Something about wet boxes or something missing
+- Something about a recipe for a spicy chicken with rice dish (enchiladas maybe)
+- Something about weekly options and basic meal charges
+- Something about wet boxes or temperature issues & gluten free
 
 #### Issues over time
-It looks like the cancellation, meal options, and spicy chicken problems happen fairly regularly.  
-The wet paper missing comments seemed to have been weekly mentioned in mid may and early june but not for the last 3 weeks.
+It looks like the cancellation, meal options, and spicy chicken and rice problems happen fairly regularly.  
+The wet paper missing comments seemed to be infrequent but upticked slightly mid june.
 
 <img src="/assets/images/reddit-hellofresh/10-plotproblems.png">
 
