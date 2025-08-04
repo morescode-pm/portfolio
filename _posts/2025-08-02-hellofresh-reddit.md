@@ -85,7 +85,8 @@ df['selftext_compound'] = df['selftext'].fillna('').apply(lambda x: sia.polarity
 ```
 
 ## Data Cleaning
-With the sentiment ready let's take a look at how the title and selftext correlate.  
+With the sentiment ready let's take a look at how the title and selftext correlate. 
+
 <img src="/assets/images/reddit-hellofresh/2-correlate.png">
 
 Immediately you can see a value of 0.0 (totally neutral) was extracted very often from the title, and a few times from the self text. The titles are limited in length, so there might not acually be enough information to judge if the post is positve or negative.  
@@ -99,15 +100,18 @@ Of the options of dealing with this I considered:
 4. Stick with an averaging method for a compound sentiment
    
 These aren't great options - each adds its own bias, so let's take a look at what these might look like distribution wise.
+
 <img src="/assets/images/reddit-hellofresh/3-cleaning-one.png">  
 
-We're now really seeing the effect of those 0.0 sentiment scores. The distribution behind them is skewed to the left and has zeros pulling the averages down. At this point, because the title doesn't have a ton of context, and because of the 0 skewing, I decided to drop the 0.0 scores from continued analysis.
+We're now really seeing the effect of those 0.0 sentiment scores. The distribution behind them is skewed to the left and has zeros pulling the averages down. At this point, because the title doesn't have a ton of context, and because of the 0 skewing, I decided to drop the 0.0 scores from continued analysis and just stick with the selftext sentiment.  
+
 <img src="/assets/images/reddit-hellofresh/4-dropzero.png">  
 
 ## Sentiment aggregation - how is the r/hellofresh sentiment over time?
 We have a few options for aggregating a sentiment score over time - just the day it was made, or aggregated by some time bucket - we'll use weekly.  
 
-Then, we could use the mean, the median, a range, or porportions of good vs bad. Let's take 
+Then, we could use the mean, the median, a range, or porportions of good vs bad. Let's take a look at the options.  
+
 <img src="/assets/images/reddit-hellofresh/5-medimean.png">
 
 
@@ -117,7 +121,7 @@ We also do have a very full range of sentiment with the min and max both reachin
 
 ## BERT Clusters - when negative sentiment, what is going wrong?
 Let's see if there are any similarities between negative comments.  BERT (Bidirectional Encoder Representations from Transformers) learns relationships between words. This was trained on a massive amount of text and instead of just sentiment, it weighs the importantce of sentences when processing it.  
-Setting up for BERT is even easier than VADER:  
+Setting up for BERT is straightforward as well:  
 ```python
 # Import BERT and create a model for processing
 from bertopic import BERTopic
@@ -137,7 +141,7 @@ topic_model.get_topic_info()
 
 <img src="/assets/images/reddit-hellofresh/6-firstbert.png">
 
-The first run of this gave us some really crappy topic categories. This is because our text still has 'stop words' - very generic common words that should just be left out because they don't add to the topic. We can clean that with:  
+The first run of this gave us some really crappy topic categories. This is because our text still has 'stop words' - very generic common words that should just be left out because they don't add to the topic. We can clean that with a stopword dictionary from nltk with some specific additions in {} :  
 
 ```python
 from nltk.corpus import stopwords
@@ -176,8 +180,8 @@ The wet paper missing comments seemed to have been weekly mentioned in mid may a
 <img src="/assets/images/reddit-hellofresh/10-plotproblems.png">
 
 ## Next Steps
-If we wanted to expand on this style of analysis the next place to add data would be the comments. Often people pile on to threads.  
-We'd want to start to deduplicate comments within posts by author though to avoid supersampling really happy or really unhappy redditors.  
+If we wanted to expand on this style of analysis the next place to add data would be the comments. Often people pile on to threads. 
+We'd want to start to deduplicate comments within posts by author though to avoid supersampling really happy or really unhappy redditors. 
 From there we could take the same steps, or even use BERT for the sentiment analysis too.  
 
 Ultimately though, even with all of this cleaning - the reddit community is just 'one group' of consumers, it can add context to the company's external evaluation, but shouldn't be used as a sole resource.
