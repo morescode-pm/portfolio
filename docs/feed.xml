@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://www.morescode-analytics.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.morescode-analytics.com/" rel="alternate" type="text/html" /><updated>2025-08-04T08:24:32-05:00</updated><id>https://www.morescode-analytics.com/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://www.morescode-analytics.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.morescode-analytics.com/" rel="alternate" type="text/html" /><updated>2025-08-04T08:31:40-05:00</updated><id>https://www.morescode-analytics.com/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
 </subtitle><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><entry><title type="html">How does r/hellofresh feel about hellofresh?</title><link href="https://www.morescode-analytics.com/2025/08/02/hellofresh-reddit.html" rel="alternate" type="text/html" title="How does r/hellofresh feel about hellofresh?" /><published>2025-08-02T00:00:00-05:00</published><updated>2025-08-02T00:00:00-05:00</updated><id>https://www.morescode-analytics.com/2025/08/02/hellofresh-reddit</id><content type="html" xml:base="https://www.morescode-analytics.com/2025/08/02/hellofresh-reddit.html"><![CDATA[<p>I started interviewing for hellofresh recently. Part of the job posting listed ‘experience with unstructured data’ - so I decided to take a look at the sentiment in the subreddit r/hellofresh about.. hellofresh!</p>
 
 <p>Here’s an image of the recent reddit ‘hot’ 1000 posts from r/hellofresh:<br />
@@ -81,8 +81,9 @@ The sentiment analysis is scaled from -1.0 to 1.0 where:</p>
 </code></pre></div></div>
 
 <h2 id="data-cleaning">Data Cleaning</h2>
-<p>With the sentiment ready let’s take a look at how the title and selftext correlate.<br />
-<img src="/assets/images/reddit-hellofresh/2-correlate.png" /></p>
+<p>With the sentiment ready let’s take a look at how the title and selftext correlate.</p>
+
+<p><img src="/assets/images/reddit-hellofresh/2-correlate.png" /></p>
 
 <p>Immediately you can see a value of 0.0 (totally neutral) was extracted very often from the title, and a few times from the self text. The titles are limited in length, so there might not acually be enough information to judge if the post is positve or negative.</p>
 
@@ -96,17 +97,20 @@ The sentiment analysis is scaled from -1.0 to 1.0 where:</p>
   <li>Stick with an averaging method for a compound sentiment</li>
 </ol>
 
-<p>These aren’t great options - each adds its own bias, so let’s take a look at what these might look like distribution wise.
-<img src="/assets/images/reddit-hellofresh/3-cleaning-one.png" /></p>
+<p>These aren’t great options - each adds its own bias, so let’s take a look at what these might look like distribution wise.</p>
 
-<p>We’re now really seeing the effect of those 0.0 sentiment scores. The distribution behind them is skewed to the left and has zeros pulling the averages down. At this point, because the title doesn’t have a ton of context, and because of the 0 skewing, I decided to drop the 0.0 scores from continued analysis.
-<img src="/assets/images/reddit-hellofresh/4-dropzero.png" /></p>
+<p><img src="/assets/images/reddit-hellofresh/3-cleaning-one.png" /></p>
+
+<p>We’re now really seeing the effect of those 0.0 sentiment scores. The distribution behind them is skewed to the left and has zeros pulling the averages down. At this point, because the title doesn’t have a ton of context, and because of the 0 skewing, I decided to drop the 0.0 scores from continued analysis and just stick with the selftext sentiment.</p>
+
+<p><img src="/assets/images/reddit-hellofresh/4-dropzero.png" /></p>
 
 <h2 id="sentiment-aggregation---how-is-the-rhellofresh-sentiment-over-time">Sentiment aggregation - how is the r/hellofresh sentiment over time?</h2>
 <p>We have a few options for aggregating a sentiment score over time - just the day it was made, or aggregated by some time bucket - we’ll use weekly.</p>
 
-<p>Then, we could use the mean, the median, a range, or porportions of good vs bad. Let’s take 
-<img src="/assets/images/reddit-hellofresh/5-medimean.png" /></p>
+<p>Then, we could use the mean, the median, a range, or porportions of good vs bad. Let’s take a look at the options.</p>
+
+<p><img src="/assets/images/reddit-hellofresh/5-medimean.png" /></p>
 
 <p>The mean shows neutral to positive over time and the median shows more positive. They both follow the same general trend.</p>
 
@@ -114,7 +118,7 @@ The sentiment analysis is scaled from -1.0 to 1.0 where:</p>
 
 <h2 id="bert-clusters---when-negative-sentiment-what-is-going-wrong">BERT Clusters - when negative sentiment, what is going wrong?</h2>
 <p>Let’s see if there are any similarities between negative comments.  BERT (Bidirectional Encoder Representations from Transformers) learns relationships between words. This was trained on a massive amount of text and instead of just sentiment, it weighs the importantce of sentences when processing it.<br />
-Setting up for BERT is even easier than VADER:</p>
+Setting up for BERT is straightforward as well:</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import BERT and create a model for processing
 </span><span class="kn">from</span> <span class="nn">bertopic</span> <span class="kn">import</span> <span class="n">BERTopic</span>
 <span class="n">topic_model</span> <span class="o">=</span> <span class="n">BERTopic</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s">'english'</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -133,7 +137,7 @@ Setting up for BERT is even easier than VADER:</p>
 
 <p><img src="/assets/images/reddit-hellofresh/6-firstbert.png" /></p>
 
-<p>The first run of this gave us some really crappy topic categories. This is because our text still has ‘stop words’ - very generic common words that should just be left out because they don’t add to the topic. We can clean that with:</p>
+<p>The first run of this gave us some really crappy topic categories. This is because our text still has ‘stop words’ - very generic common words that should just be left out because they don’t add to the topic. We can clean that with a stopword dictionary from nltk with some specific additions in {} :</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
 <span class="n">nltk</span><span class="p">.</span><span class="n">download</span><span class="p">(</span><span class="s">'stopwords'</span><span class="p">)</span>
@@ -173,8 +177,8 @@ The wet paper missing comments seemed to have been weekly mentioned in mid may a
 <p><img src="/assets/images/reddit-hellofresh/10-plotproblems.png" /></p>
 
 <h2 id="next-steps">Next Steps</h2>
-<p>If we wanted to expand on this style of analysis the next place to add data would be the comments. Often people pile on to threads.<br />
-We’d want to start to deduplicate comments within posts by author though to avoid supersampling really happy or really unhappy redditors.<br />
+<p>If we wanted to expand on this style of analysis the next place to add data would be the comments. Often people pile on to threads. 
+We’d want to start to deduplicate comments within posts by author though to avoid supersampling really happy or really unhappy redditors. 
 From there we could take the same steps, or even use BERT for the sentiment analysis too.</p>
 
 <p>Ultimately though, even with all of this cleaning - the reddit community is just ‘one group’ of consumers, it can add context to the company’s external evaluation, but shouldn’t be used as a sole resource.</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="reddit" /><category term="sentiment" /><category term="NLP" /><summary type="html"><![CDATA[I started interviewing for hellofresh recently. Part of the job posting listed ‘experience with unstructured data’ - so I decided to take a look at the sentiment in the subreddit r/hellofresh about.. hellofresh!]]></summary></entry><entry><title type="html">Building Tools for Better Experiments</title><link href="https://www.morescode-analytics.com/2025/07/25/doe-hero.html" rel="alternate" type="text/html" title="Building Tools for Better Experiments" /><published>2025-07-25T00:00:00-05:00</published><updated>2025-07-25T00:00:00-05:00</updated><id>https://www.morescode-analytics.com/2025/07/25/doe-hero</id><content type="html" xml:base="https://www.morescode-analytics.com/2025/07/25/doe-hero.html"><![CDATA[<p>Design of Experiments (DOE) is a key tool for planning efficient research. Yet, due to limited access to tools and knowledge, the vast majority of experiments are done ‘one factor at a time’ (OFAAT). So, I built and published a free app with Python and streamlit called “<a href="https://doe-hero.streamlit.app/">DOE Hero</a>” to help.</p>
