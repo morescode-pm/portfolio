@@ -23,7 +23,7 @@ From experimental design to modeling and interpretation, I help teams get more f
 
 Want to know what people really think about your product, service, or competitors? I specialize in analyzing Reddit and social media content to uncover patterns, complaints, and opportunities.
 
-**Pricing Options** 
+<u><b>Pricing Options</b></u>
 
 - **Exploratory / Prototype** ($300 - 600)
     - Quick, focused look at a question or platform. Includes a short summary and sample visuals.  
