@@ -4,7 +4,9 @@ title: Services
 permalink: /services/
 ---
 
-I help companies make sense of messy, human-centered data - especially what people say on social media. My work turns unstructured conversation into actionable insight, backed by solid statistics and visual storytelling.
+From structured studies to social media sentiment, I translate complexity into clear takeaways using statistics, modeling, and visual storytelling.
+
+---
 
 📊 Data Analysis & Statistical Consulting  
 ---
@@ -16,6 +18,8 @@ From experimental design to modeling and interpretation, I help teams get more f
 - Exploratory visuals and simple regression modeling
 - Insights written in plain English
 
+> All consulting work is billed at **$75/hour**
+
 ---
 
 📣 Social Media Sentiment Analysis
@@ -23,21 +27,18 @@ From experimental design to modeling and interpretation, I help teams get more f
 
 Want to know what people really think about your product, service, or competitors? I specialize in analyzing Reddit and social media content to uncover patterns, complaints, and opportunities.
 
-<u><b>Pricing Options</b></u>
+<u><b>Pricing Options (50% Introductory Discount!) </b></u>
 
-- **Exploratory / Prototype** ($300 - 600)
-    - Quick, focused look at a question or platform. Includes a short summary and sample visuals.  
-&nbsp;
+| Tier | Description | Price | Discounted Price |
+|------|-------------|-------|------------------|
+| **Exploratory / Prototype** | *Get quick answers to targeted questions.* Ideal for testing a hypothesis or evaluating a platform. | **$300 - $600** | $150 - $300 |
+| **Insight Deck** | *Business-ready summary with charts, insights, and example posts.* Great for strategy, presentations, or investor updates. | **$750 - $1,500+** | $375 - 750+ |
+| **Interactive Dashboard** | *Live\*, filterable dashboard that updates regularly.* Ideal for teams tracking trends over time. | **$1,000 - $3,000** | $500 - $1500 |
 
-- **Insight Deck** ($750 - 1,500+)
-    - Business-ready slides with charts, summaries, and sample posts. Great for internal strategy or investor updates.  
-&nbsp;
+> \*Live dashboards require ongoing hosting, data access, and maintenance to ensure your information is reliable. Monthly service fees usually range from **$100 to $300**, depending on scope and data volume. For now, you'll recieve a 50% discount on monthly fees as well.
 
-- **Interactive Dashboard** ($1,000 - 3,000)
-    - For clients who want a self-serve tool to explore trends by topic, time, or platform.  
-&nbsp;
-
-*Pricing varies based on scope and deliverables.*
+> All packages include summary findings, visuals, and optional call to discuss results.  
+> Additional work beyond agreed scope is billed at **$75/hour**.
 
 ---
 
