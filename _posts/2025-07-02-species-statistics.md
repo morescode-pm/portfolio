@@ -1,6 +1,6 @@
 ---
 layout: post
-tags: [python, jules, tableau, deeplearning, pandas, matplotlib]
+tags: [python, ai, deeplearning, pandas, matplotlib]
 title: Chicago wildlife species analysis - a starting point
 
 ---
