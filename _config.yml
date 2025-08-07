@@ -18,7 +18,7 @@ minima:
   nav_pages:
     - about.md
     - portfolio.md
-    - services.md
+    - services/index.md
 
   show_excerpts: true
   social_links:
