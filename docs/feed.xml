@@ -1,29 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-08-07T13:23:12-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-08-07T13:59:36-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
 </subtitle><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><entry><title type="html">HOA Budgeting - Extracting clarity from a PDF</title><link href="http://localhost:4000/2025/08/04/hoa-budgets.html" rel="alternate" type="text/html" title="HOA Budgeting - Extracting clarity from a PDF" /><published>2025-08-04T00:00:00-05:00</published><updated>2025-08-04T00:00:00-05:00</updated><id>http://localhost:4000/2025/08/04/hoa-budgets</id><content type="html" xml:base="http://localhost:4000/2025/08/04/hoa-budgets.html"><![CDATA[<p>Do you live in an HOA and get a once-per-year pdf with the breakdown of where your dues were allocated? If yes, then this post is for you!
 Instead of trying (and failing) to understand what on earth the figures in a poorly structured table mean - let’s build a dashboard in Tableau.</p>
 
-<p>Here’s the <a href="https://public.tableau.com/app/profile/paul.moresco/viz/HOABudgetReview/HOABudgetBreakdown">Dashboard</a> - embedded up front so you can get right into the digging:
-<script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script></p>
-
-<style>
-  #vizWrapper {
-    width: 200%;
-    max-width: 1500px; /* optional cap */
-    height: 90vh;      /* use % of screen height */
-    margin: auto;
-  }
-
-  tableau-viz {
-    width: 500%;
-    height: 100%;
-    display: block;
-    border: none;
-  }
-</style>
-
-<div id="vizWrapper">
-  <tableau-viz id="tableauViz" src="https://public.tableau.com/views/HOABudgetReview/HOABudgetBreakdown" toolbar="bottom" hide-tabs="" device="desktop">
-  </tableau-viz>
+<p>Here’s the <a href="https://public.tableau.com/app/profile/paul.moresco/viz/HOABudgetReview/HOABudgetBreakdown">Dashboard</a> - embedded up front so you can get right into the digging:</p>
+<div class="full-width">
+    <div id="vizWrapper">
+        <tableau-viz id="tableauViz" src="https://public.tableau.com/views/HOABudgetReview/HOABudgetBreakdown" toolbar="bottom" hide-tabs="" device="desktop">
+        </tableau-viz>
+    </div>
 </div>
 
 <p>Keep reading to see my approach and how you could do this, too.</p>
@@ -767,14 +751,6 @@ At 5% - that false negative cost drops to 19.79% in our sample. We’ll use thes
 
 <h2 id="tableau-dashboard--">Tableau Dashboard -</h2>
 <h1 id="ur-humans-vs-ai-cameratraps">UR Humans vs AI Cameratraps</h1>
-<script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
-
-<style>
-  #vizWrapper {
-    width: 100%;
-    height: 500px;
-  }
-</style>
 
 <div id="vizWrapper">
   <tableau-viz id="tableauViz" src="https://public.tableau.com/views/URHumansvsAICameratraps/HumanLabels" toolbar="bottom">

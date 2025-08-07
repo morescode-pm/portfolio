@@ -9,32 +9,16 @@ Do you live in an HOA and get a once-per-year pdf with the breakdown of where yo
 Instead of trying (and failing) to understand what on earth the figures in a poorly structured table mean - let's build a dashboard in Tableau.
 
 Here's the [Dashboard][1] - embedded up front so you can get right into the digging:
-<script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
-
-<style>
-  #vizWrapper {
-    width: 200%;
-    max-width: 1500px; /* optional cap */
-    height: 90vh;      /* use % of screen height */
-    margin: auto;
-  }
-
-  tableau-viz {
-    width: 500%;
-    height: 100%;
-    display: block;
-    border: none;
-  }
-</style>
-
-<div id="vizWrapper">
-  <tableau-viz
-    id="tableauViz"
-    src="https://public.tableau.com/views/HOABudgetReview/HOABudgetBreakdown"
-    toolbar="bottom"
-    hide-tabs
-    device="desktop">
-  </tableau-viz>
+<div class="full-width">
+    <div id="vizWrapper">
+        <tableau-viz
+            id="tableauViz"
+            src="https://public.tableau.com/views/HOABudgetReview/HOABudgetBreakdown"
+            toolbar="bottom"
+            hide-tabs
+            device="desktop">
+        </tableau-viz>
+    </div>
 </div>
 
 
