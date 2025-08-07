@@ -3,6 +3,26 @@
 
   {%- include head.html -%}
 
+  <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+
+  <style>
+    #vizWrapper {
+      display: flex;
+      justify-content: center;
+      width: 200%;
+      max-width: 1500px; /* optional cap */
+      height: 90vh;      /* use % of screen height */
+      margin: auto;
+    }
+
+    tableau-viz {
+      width: 500%;
+      height: 100%;
+      display: block;
+      border: none;
+    }
+  </style>
+
   <body>
 
     {%- include header.html -%}

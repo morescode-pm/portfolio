@@ -22,7 +22,27 @@
 <!-- End Jekyll SEO tag -->
 <link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="MORESCODE ANALYTICS LLC" />
 </head>
-<body><header class="site-header">
+<script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+
+  <style>
+    #vizWrapper {
+      display: flex;
+      justify-content: center;
+      width: 200%;
+      max-width: 1500px; /* optional cap */
+      height: 90vh;      /* use % of screen height */
+      margin: auto;
+    }
+
+    tableau-viz {
+      width: 500%;
+      height: 100%;
+      display: block;
+      border: none;
+    }
+  </style>
+
+  <body><header class="site-header">
 
   <div class="wrapper">
     <a class="site-title" rel="author" href="/">MORESCODE ANALYTICS LLC</a>
@@ -42,15 +62,33 @@
 </header><main class="page-content" aria-label="Content">
       <div class="wrapper">
         <div class="post"><h1 class="page-heading" style="text-align: center;">HOA Budgeting - Extracting clarity from a PDF</h1><div class="post-meta" style="text-align: center; color: #666; margin-bottom: 1.5em;">
-    Aug 4, 2025&nbsp;-&nbsp;<span class="post-tag" style="color: teal">#SQL</a>, <span class="post-tag" style="color: teal">#GoogleBigQuery</a>, <span class="post-tag" style="color: teal">#Tableau</a></div>
+    Aug 4, 2025&nbsp;-&nbsp;<span class="post-tag" style="color: teal">#sql</a>, <span class="post-tag" style="color: teal">#googlebigquery</a>, <span class="post-tag" style="color: teal">#tableau</a></div>
 
   <div class="post-content">
     <p>Do you live in an HOA and get a once-per-year pdf with the breakdown of where your dues were allocated? If yes, then this post is for you!
 Instead of trying (and failing) to understand what on earth the figures in a poorly structured table mean - let’s build a dashboard in Tableau.</p>
 
-<p>Here’s the <a href="https://public.tableau.com/app/profile/paul.moresco/viz/HOABudgetReview/HOABudgetBreakdown">Dashboard</a> - embedded up front so you can get right into the digging:</p>
+<p>Here’s the <a href="https://public.tableau.com/app/profile/paul.moresco/viz/HOABudgetReview/HOABudgetBreakdown">Dashboard</a> - embedded up front so you can get right into the digging:
+<script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script></p>
+
+<style>
+  #vizWrapper {
+    width: 200%;
+    max-width: 1500px; /* optional cap */
+    height: 90vh;      /* use % of screen height */
+    margin: auto;
+  }
+
+  tableau-viz {
+    width: 500%;
+    height: 100%;
+    display: block;
+    border: none;
+  }
+</style>
+
 <div id="vizWrapper">
-  <tableau-viz id="tableauViz" src="https://public.tableau.com/app/profile/paul.moresco/viz/HOABudgetReview/HOABudgetBreakdown" toolbar="bottom">
+  <tableau-viz id="tableauViz" src="https://public.tableau.com/views/HOABudgetReview/HOABudgetBreakdown" toolbar="bottom" hide-tabs="" device="desktop">
   </tableau-viz>
 </div>
 
@@ -69,6 +107,7 @@ Get a notification that your dues are going up 15%</p>
   <li>Create a table in BQ that links to that google sheet (and updates when the sheet is updated)</li>
   <li>Create a view that unpivots or unions columns</li>
   <li>Import into Tableau - either with a connected sheet or tableau desktop free google bigquery connector + extract</li>
+  <li>Note that changes to the source google sheet are reflected in the transformed google sheet on a refresh.</li>
 </ol>
 
 

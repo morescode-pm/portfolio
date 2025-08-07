@@ -29,7 +29,7 @@ Whether you need a public-facing report or a private internal tool, I offer turn
 - Optimized for SEO and public transparency  
 
 **One-time cost:** Starting at **$750**  
-Includes data cleanup, design, and walkthrough video.
+Includes Tableau Public account creation, data cleanup, design, and walkthrough video. 
 
 ---
 

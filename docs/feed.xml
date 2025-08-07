@@ -1,10 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-08-07T11:37:27-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-08-07T13:23:12-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
 </subtitle><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><entry><title type="html">HOA Budgeting - Extracting clarity from a PDF</title><link href="http://localhost:4000/2025/08/04/hoa-budgets.html" rel="alternate" type="text/html" title="HOA Budgeting - Extracting clarity from a PDF" /><published>2025-08-04T00:00:00-05:00</published><updated>2025-08-04T00:00:00-05:00</updated><id>http://localhost:4000/2025/08/04/hoa-budgets</id><content type="html" xml:base="http://localhost:4000/2025/08/04/hoa-budgets.html"><![CDATA[<p>Do you live in an HOA and get a once-per-year pdf with the breakdown of where your dues were allocated? If yes, then this post is for you!
 Instead of trying (and failing) to understand what on earth the figures in a poorly structured table mean - let’s build a dashboard in Tableau.</p>
 
-<p>Here’s the <a href="https://public.tableau.com/app/profile/paul.moresco/viz/HOABudgetReview/HOABudgetBreakdown">Dashboard</a> - embedded up front so you can get right into the digging:</p>
+<p>Here’s the <a href="https://public.tableau.com/app/profile/paul.moresco/viz/HOABudgetReview/HOABudgetBreakdown">Dashboard</a> - embedded up front so you can get right into the digging:
+<script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script></p>
+
+<style>
+  #vizWrapper {
+    width: 200%;
+    max-width: 1500px; /* optional cap */
+    height: 90vh;      /* use % of screen height */
+    margin: auto;
+  }
+
+  tableau-viz {
+    width: 500%;
+    height: 100%;
+    display: block;
+    border: none;
+  }
+</style>
+
 <div id="vizWrapper">
-  <tableau-viz id="tableauViz" src="https://public.tableau.com/app/profile/paul.moresco/viz/HOABudgetReview/HOABudgetBreakdown" toolbar="bottom">
+  <tableau-viz id="tableauViz" src="https://public.tableau.com/views/HOABudgetReview/HOABudgetBreakdown" toolbar="bottom" hide-tabs="" device="desktop">
   </tableau-viz>
 </div>
 
@@ -23,7 +41,8 @@ Get a notification that your dues are going up 15%</p>
   <li>Create a table in BQ that links to that google sheet (and updates when the sheet is updated)</li>
   <li>Create a view that unpivots or unions columns</li>
   <li>Import into Tableau - either with a connected sheet or tableau desktop free google bigquery connector + extract</li>
-</ol>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="SQL" /><category term="GoogleBigQuery" /><category term="Tableau" /><summary type="html"><![CDATA[Do you live in an HOA and get a once-per-year pdf with the breakdown of where your dues were allocated? If yes, then this post is for you! Instead of trying (and failing) to understand what on earth the figures in a poorly structured table mean - let’s build a dashboard in Tableau.]]></summary></entry><entry><title type="html">How does r/hellofresh feel about hellofresh?</title><link href="http://localhost:4000/2025/08/02/hellofresh-reddit.html" rel="alternate" type="text/html" title="How does r/hellofresh feel about hellofresh?" /><published>2025-08-02T00:00:00-05:00</published><updated>2025-08-02T00:00:00-05:00</updated><id>http://localhost:4000/2025/08/02/hellofresh-reddit</id><content type="html" xml:base="http://localhost:4000/2025/08/02/hellofresh-reddit.html"><![CDATA[<p>I started interviewing for hellofresh recently. Part of the job posting listed ‘experience with unstructured data’ - so I decided to take a look at the sentiment in the subreddit r/hellofresh about.. hellofresh!</p>
+  <li>Note that changes to the source google sheet are reflected in the transformed google sheet on a refresh.</li>
+</ol>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="sql" /><category term="googlebigquery" /><category term="tableau" /><summary type="html"><![CDATA[Do you live in an HOA and get a once-per-year pdf with the breakdown of where your dues were allocated? If yes, then this post is for you! Instead of trying (and failing) to understand what on earth the figures in a poorly structured table mean - let’s build a dashboard in Tableau.]]></summary></entry><entry><title type="html">How does r/hellofresh feel about hellofresh?</title><link href="http://localhost:4000/2025/08/02/hellofresh-reddit.html" rel="alternate" type="text/html" title="How does r/hellofresh feel about hellofresh?" /><published>2025-08-02T00:00:00-05:00</published><updated>2025-08-02T00:00:00-05:00</updated><id>http://localhost:4000/2025/08/02/hellofresh-reddit</id><content type="html" xml:base="http://localhost:4000/2025/08/02/hellofresh-reddit.html"><![CDATA[<p>I started interviewing for hellofresh recently. Part of the job posting listed ‘experience with unstructured data’ - so I decided to take a look at the sentiment in the subreddit r/hellofresh about.. hellofresh!</p>
 
 <p>Here’s an image of the recent reddit ‘hot’ 1000 posts from r/hellofresh:<br />
 <img src="/assets/images/reddit-hellofresh/0-dirtydata.png" /></p>
