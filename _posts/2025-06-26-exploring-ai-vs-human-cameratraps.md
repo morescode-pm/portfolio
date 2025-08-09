@@ -122,13 +122,6 @@ Here's a [link to the dashboard][4], also embedded below.
 
 ## Tableau Dashboard - 
 # UR Humans vs AI Cameratraps
-<script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
-<style>
-  #vizWrapper {
-    width: 100%;
-    height: 500px;
-  }
-</style>
 
 <div id="vizWrapper">
   <tableau-viz id="tableauViz"

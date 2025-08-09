@@ -22,7 +22,30 @@
 <!-- End Jekyll SEO tag -->
 <link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="MORESCODE ANALYTICS LLC" />
 </head>
-<body><header class="site-header">
+<script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+
+  <style>
+    .full-width{
+      width: 1200px;
+      margin-left: -200px;
+    }
+
+    #vizWrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      height: 90vh;      /* use % of screen height */
+    }
+
+    tableau-viz {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: none;
+    }
+  </style>
+
+  <body><header class="site-header">
 
   <div class="wrapper">
     <a class="site-title" rel="author" href="/">MORESCODE ANALYTICS LLC</a>
@@ -42,7 +65,7 @@
 </header><main class="page-content" aria-label="Content">
       <div class="wrapper">
         <div class="post"><h1 class="page-heading" style="text-align: center;">Chicago wildlife species analysis - a starting point</h1><div class="post-meta" style="text-align: center; color: #666; margin-bottom: 1.5em;">
-    Jul 2, 2025&nbsp;-&nbsp;<span class="post-tag" style="color: teal">#python</a>, <span class="post-tag" style="color: teal">#jules</a>, <span class="post-tag" style="color: teal">#tableau</a>, <span class="post-tag" style="color: teal">#deeplearning</a>, <span class="post-tag" style="color: teal">#pandas</a>, <span class="post-tag" style="color: teal">#matplotlib</a></div>
+    Jul 2, 2025&nbsp;-&nbsp;<span class="post-tag" style="color: teal">#python</a>, <span class="post-tag" style="color: teal">#ai</a>, <span class="post-tag" style="color: teal">#deeplearning</a>, <span class="post-tag" style="color: teal">#pandas</a>, <span class="post-tag" style="color: teal">#matplotlib</a></div>
 
   <div class="post-content">
     <p>After improving the species classification model to a point where we can start to trust its predictions - we ran it on 71k+ images where speciesnet predicted at least 5% likely containing an animal.</p>

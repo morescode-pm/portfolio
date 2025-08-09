@@ -22,7 +22,30 @@
 <!-- End Jekyll SEO tag -->
 <link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="MORESCODE ANALYTICS LLC" />
 </head>
-<body><header class="site-header">
+<script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+
+  <style>
+    .full-width{
+      width: 1200px;
+      margin-left: -200px;
+    }
+
+    #vizWrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      height: 90vh;      /* use % of screen height */
+    }
+
+    tableau-viz {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: none;
+    }
+  </style>
+
+  <body><header class="site-header">
 
   <div class="wrapper">
     <a class="site-title" rel="author" href="/">MORESCODE ANALYTICS LLC</a>

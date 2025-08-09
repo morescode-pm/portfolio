@@ -184,6 +184,8 @@ If we wanted to expand on this style of analysis the next place to add data woul
 We'd want to start to deduplicate comments within posts by author though to avoid supersampling really happy or really unhappy redditors. 
 From there we could take the same steps, or even use BERT for the sentiment analysis too.  
 
+On all of our minds today, too: What about AI? VADER and BERT are relatively old by comparison - it would be interesting to validate/get a second opinion from an AI model run on the dataset. If the results are interesting, I'll post them here.  
+
 Ultimately though, even with all of this cleaning - the reddit community is just 'one group' of consumers, it can add context to the company's external evaluation, but shouldn't be used as a sole resource.
 
 
