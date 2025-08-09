@@ -17,9 +17,9 @@ From experimental design to interpretation, I help teams get more from their dat
 
 ---
 
-> Pricing varies based on scope and deliverables. Analysis packages start at **$300**.  
+> Pricing varies based on scope and deliverables.  
 > All packages include summary findings, visuals, and an optional call to discuss results.  
-> Additional work beyond the agreed scope is billed at **$75/hour**.
+> Additional work beyond the agreed scope is billed hourly.
 
 ---
 
