@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-08-07T13:59:36-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-08-08T19:00:52-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
 </subtitle><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><entry><title type="html">HOA Budgeting - Extracting clarity from a PDF</title><link href="http://localhost:4000/2025/08/04/hoa-budgets.html" rel="alternate" type="text/html" title="HOA Budgeting - Extracting clarity from a PDF" /><published>2025-08-04T00:00:00-05:00</published><updated>2025-08-04T00:00:00-05:00</updated><id>http://localhost:4000/2025/08/04/hoa-budgets</id><content type="html" xml:base="http://localhost:4000/2025/08/04/hoa-budgets.html"><![CDATA[<p>Do you live in an HOA and get a once-per-year pdf with the breakdown of where your dues were allocated? If yes, then this post is for you!
 Instead of trying (and failing) to understand what on earth the figures in a poorly structured table mean - let’s build a dashboard in Tableau.</p>
 
@@ -10,23 +10,174 @@ Instead of trying (and failing) to understand what on earth the figures in a poo
     </div>
 </div>
 
-<p>Keep reading to see my approach and how you could do this, too.</p>
+<p>Keep reading to see how this was built.</p>
+
+<p>If you know anyone who could benefit from a personalized dashboard like this (for their HOA or something else) - reach out at:<br />
+hello@morescode-analytics.com</p>
 
 <h2 id="introduction">Introduction</h2>
-<p>My dues keep going up. Sound familiar? Wondering why? Me too.</p>
+<p>My HOA dues keep going up. Sound familiar? Wondering why? <strong>Me too.</strong></p>
 
-<p>Starts with a pdf table nobody wants to read.
-Get a notification that your dues are going up 15%</p>
+<p>Once a year, residents are mailed a physical and pdf of their HOA’s Actual/Projected/Budgeted dollars for prior, current, and future years. Having lived in three different HOAs accross parts of the US (Midwest and Mountain West) I have seen a few version of these mailers. They mostly all look like multiple pages (mine has been 5-10 pages)   of this:</p>
 
-<p>Spend some time trying to understand where the money is going.</p>
+<p><img src="/assets/images/hoa-stupid/1-fivepagesofBS.png" /></p>
+
+<p>A pdf table nobody wants to read - potentially convoluted on purpose.<br />
+What you do pay attention to though is the accompanying notification that your dues are going up 9.72%.</p>
+
+<p>So, like any good and slightly annoyed data guy - I’ve spent some time trying to understand where the money is going.</p>
+
+<h2 id="cleaning">Cleaning</h2>
+<p>Data Entry. Nobody’s favorite finger jam (piano is better).</p>
+
+<h5 id="step-1-transcribe-the-pdf-to-a-google-sheet">Step 1. Transcribe the pdf to a google sheet</h5>
+<p>Yep. I entered it manually. I could have used a pdf reader tool, or OCR / AI - but also there’s no better way to look at every number than to have to type them all out yourself.<br />
+To minimize mistakes, I kept the format similar to the original PDF for easy scanning and double checking - the major addition is parsing out text into categories, descriptions, and types (expense or income? regular or transfer?). As more budgets are shared every year, just one column needs to be added. Here’s a preview of that data entry sheet:</p>
+
+<p><img src="/assets/images/hoa-stupid/3-fingerjam.png" /></p>
+
+<h5 id="step-2-uploading-a-table-to-google-bigquery">Step 2. Uploading a table to Google BigQuery</h5>
+<p>The data entry was easy in google sheets - but the type of pivot operation needed to make this tableau friendly is not. Basically we need each column to be copied into a set of rows for each category/description - this is called an “unpivot” and is much easier to do in SQL.</p>
+
+<p>GBQ is a SQL database. If you only process &lt;30gb per month, there are no costs. The size of this table is a few KB - so there’s no risk at all. Plus, a tip if you’re worried about getting a bill, don’t give them your credit card. <em>They won’t let you run anything that exceeds the monthly max if you don’t give them your credit card.</em> Problem solved.</p>
+
+<p>You’ll need a project and a dataset (these are practically unlimited, just think of them like fancy folders), at which point you can upload from google sheets using BigQuery’s User Interface.</p>
+
+<p><img src="/assets/images/hoa-stupid/4-bqcreatetable.png" /></p>
+
+<p><em>Really important and not shown: check “autodetect schema”, and “header rows to skip” = 1.</em></p>
+
+<p>Now here’s the very cool part. When you do it this way, any changes you make in the google sheet are near time reflected in the database. <em>Awesome</em>. This works really really well for single file spreadsheets - like if you’re just getting started and have all of the information you need in one table.</p>
+
+<h5 id="step-3-transforming-your-data-using-sql">Step 3. Transforming your data using SQL</h5>
+<p>We’re going to write a query and save it as a view. This means when we request information from the “view” the database is queried again and any new data is passed through the same logic. If you’re following along this is the second synced part of this pipeline.</p>
+
+<p>Here’s the boilerplate query:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span>
+  <span class="n">Dept_Name</span><span class="p">,</span>
+  <span class="n">Category</span><span class="p">,</span>
+  <span class="k">Type</span><span class="p">,</span>
+  <span class="n">Description</span><span class="p">,</span>
+  <span class="n">SAFE_CAST</span><span class="p">(</span><span class="n">SPLIT</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="s1">'_'</span><span class="p">)[</span><span class="k">OFFSET</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span> <span class="k">AS</span> <span class="n">STRING</span><span class="p">)</span> <span class="k">AS</span> <span class="nb">year</span><span class="p">,</span>
+  <span class="k">CASE</span>
+    <span class="k">WHEN</span> <span class="n">ENDS_WITH</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="s1">'Actual'</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'Actual'</span>
+    <span class="k">WHEN</span> <span class="n">ENDS_WITH</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="s1">'Projected'</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'Projected'</span>
+    <span class="k">WHEN</span> <span class="n">ENDS_WITH</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="s1">'Budget'</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'Budgeted'</span>
+    <span class="k">ELSE</span> <span class="s1">'Unknown'</span>
+  <span class="k">END</span> <span class="k">AS</span> <span class="n">classification</span><span class="p">,</span>
+  <span class="n">transactions</span>
+<span class="k">FROM</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="o">*</span>
+  <span class="k">FROM</span> <span class="nv">`phonic-heaven-335803.hoa_budgets.ntv_summary`</span>
+  <span class="k">WHERE</span> <span class="n">Transfer_Type</span> <span class="o">=</span> <span class="nv">"Regular"</span>
+<span class="p">)</span>
+<span class="n">UNPIVOT</span> <span class="p">(</span>
+  <span class="n">transactions</span> <span class="k">FOR</span> <span class="n">col</span> <span class="k">IN</span> <span class="p">(</span>
+    <span class="n">_2022_Actual</span><span class="p">,</span>
+    <span class="n">_2023_Projected</span><span class="p">,</span>
+    <span class="n">_2024_Projected</span><span class="p">,</span>
+    <span class="n">_2025_Budget</span>
+  <span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p>The key part to understand of what we’re doing is the UNPIVOT.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">UNPIVOT</span> <span class="p">(</span>
+  <span class="n">transactions</span> <span class="k">FOR</span> <span class="n">col</span> <span class="k">IN</span> <span class="p">(</span>
+    <span class="n">_2022_Actual</span><span class="p">,</span>
+    <span class="n">_2023_Projected</span><span class="p">,</span>
+    <span class="n">_2024_Projected</span><span class="p">,</span>
+    <span class="n">_2025_Budget</span>
+  <span class="p">)</span>
+</code></pre></div></div>
+
+<p>This is creating two new columns called <code class="language-plaintext highlighter-rouge">col</code> and <code class="language-plaintext highlighter-rouge">transactions</code>, then for each <code class="language-plaintext highlighter-rouge">col</code> the values in the original column name (ex _2022_Actual) are placed in the <code class="language-plaintext highlighter-rouge">transactions</code> column - keeping the category, type, and descriptions all together. Unpivot essentially does this:</p>
+
+<p>Starting Table:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>category</th>
+      <th>_2024_Projected</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Assessments</td>
+      <td>710856.44</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Unpivoted Table:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>category</th>
+      <th>transactions</th>
+      <th>col</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Assessments</td>
+      <td>710856.44</td>
+      <td>_2024_Projected</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>From there, the information we need about year and type (actual/projected/budget) are in the <code class="language-plaintext highlighter-rouge">col</code> and can be parsed out as needed.</p>
+
+<h5 id="step-4-connecting-from-gbq-to-tableau">Step 4. Connecting from GBQ to Tableau</h5>
+<p>Two parts here:</p>
+<ol>
+  <li>A connected google sheet</li>
+  <li>Linking to Tableau</li>
+</ol>
+
+<p>To create a connected sheet you have two options - from new google sheet or from the GBQ console. Google makes this real easy for you by including an “Open In” button in the lower right corner right after you run your query.</p>
+
+<p><img src="/assets/images/hoa-stupid/6-connectsheets.png" /></p>
+
+<p>Once in the connected sheet you’ll get a preview of what you created and then create an extract. The extract is required because Tableau doesn’t recognize the connected sheet tab as a spreadsheet. If you had a paid Tableau licence you could connect directly to GBQ with you OAuth credentials instead of all of this.</p>
+
+<p><img src="/assets/images/hoa-stupid/5-transformed.png" /></p>
+
+<p>We want the connected sheet instead of a CSV (another export option) because this is the third synced part of the pipeline - you can refresh the connection and new data from the data entry source are passed through the same SQL logic.</p>
+
+<h5 id="step-5-tableau-build-calculated-fields-worksheets-and-dashboards">Step 5. Tableau! Build calculated fields, Worksheets and dashboards</h5>
+<p>Last up is connecting to a Tableau Public workbook. One of the only connectors you can use for the free version is to a google drive file - which is why we started with that destination in mind.</p>
+
+<p>With the sheet connected - we now have a full pipeline that only need minimal data entry, a few refreshes, and then new and updated data are reflected in a nicely organized and interactive visualization. Here are two of my favorite interactions:</p>
 
 <ol>
-  <li>Transcribe the pdf to a google sheet (could use a pdf reader tool, could use OCR, could use AI)</li>
-  <li>Create a table in BQ that links to that google sheet (and updates when the sheet is updated)</li>
-  <li>Create a view that unpivots or unions columns</li>
-  <li>Import into Tableau - either with a connected sheet or tableau desktop free google bigquery connector + extract</li>
-  <li>Note that changes to the source google sheet are reflected in the transformed google sheet on a refresh.</li>
-</ol>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="sql" /><category term="googlebigquery" /><category term="tableau" /><summary type="html"><![CDATA[Do you live in an HOA and get a once-per-year pdf with the breakdown of where your dues were allocated? If yes, then this post is for you! Instead of trying (and failing) to understand what on earth the figures in a poorly structured table mean - let’s build a dashboard in Tableau.]]></summary></entry><entry><title type="html">How does r/hellofresh feel about hellofresh?</title><link href="http://localhost:4000/2025/08/02/hellofresh-reddit.html" rel="alternate" type="text/html" title="How does r/hellofresh feel about hellofresh?" /><published>2025-08-02T00:00:00-05:00</published><updated>2025-08-02T00:00:00-05:00</updated><id>http://localhost:4000/2025/08/02/hellofresh-reddit</id><content type="html" xml:base="http://localhost:4000/2025/08/02/hellofresh-reddit.html"><![CDATA[<p>I started interviewing for hellofresh recently. Part of the job posting listed ‘experience with unstructured data’ - so I decided to take a look at the sentiment in the subreddit r/hellofresh about.. hellofresh!</p>
+  <li>The waterfall plot - showing each incremental income or expense and how it reflects in the total. For example, you can see in 2025 that before the reserve expenses, the budget was very positive.</li>
+</ol>
+
+<p><img src="/assets/images/hoa-stupid/7-waterfall.png" /></p>
+
+<ol>
+  <li>The focus on category interaction - clicking on one of the categories in the expenses breakdown or transaction by category visuals updates the other charts. Here you can see that the majority of the reserve expense in 2025 was for necessary brick work in the HOA.</li>
+</ol>
+
+<p><img src="/assets/images/hoa-stupid/8-reserveexp.png" /></p>
+
+<p>I say <em>necessary</em> because that’s what we were told. Something to the effect of “no brick work = no insurance = potential breach of mortage insurance agreement = potential foreclosure for all homeowners = very difficult to sell/qualify for buyer loan” Yeah.. a bit of catastrophizing - but definitely still worth paying attention too.</p>
+
+<h2 id="the-pipeline-end-to-end">The pipeline end to end</h2>
+<p>That’s it! Now, to update the tableau dashboard with the following year’s information:<br />
+<em>Data Entry -&gt; New Field in GBQ -&gt; Refresh Connected Sheet -&gt; Refresh Tableau Source</em></p>
+
+<h2 id="like-what-you-see-and-dont-want-to-build-it-yourself">Like what you see and don’t want to build it yourself?</h2>
+<p>This type of visual can help you quickly identify where money is being spent and lead to pinpointing massive savings at a fraction of the cost to create.</p>
+
+<p>✅ I can build you a quote for developing a version tailored to your needs.<br />
+📩 Connect with me through email at hello@morescode-analytics.com.</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="sql" /><category term="googlebigquery" /><category term="tableau" /><summary type="html"><![CDATA[Do you live in an HOA and get a once-per-year pdf with the breakdown of where your dues were allocated? If yes, then this post is for you! Instead of trying (and failing) to understand what on earth the figures in a poorly structured table mean - let’s build a dashboard in Tableau.]]></summary></entry><entry><title type="html">How does r/hellofresh feel about hellofresh?</title><link href="http://localhost:4000/2025/08/02/hellofresh-reddit.html" rel="alternate" type="text/html" title="How does r/hellofresh feel about hellofresh?" /><published>2025-08-02T00:00:00-05:00</published><updated>2025-08-02T00:00:00-05:00</updated><id>http://localhost:4000/2025/08/02/hellofresh-reddit</id><content type="html" xml:base="http://localhost:4000/2025/08/02/hellofresh-reddit.html"><![CDATA[<p>I started interviewing for hellofresh recently. Part of the job posting listed ‘experience with unstructured data’ - so I decided to take a look at the sentiment in the subreddit r/hellofresh about.. hellofresh!</p>
 
 <p>Here’s an image of the recent reddit ‘hot’ 1000 posts from r/hellofresh:<br />
 <img src="/assets/images/reddit-hellofresh/0-dirtydata.png" /></p>
@@ -207,6 +358,8 @@ The wet paper missing comments seemed to be infrequent but upticked slightly mid
 <p>If we wanted to expand on this style of analysis the next place to add data would be the comments. Often people pile on to threads. 
 We’d want to start to deduplicate comments within posts by author though to avoid supersampling really happy or really unhappy redditors. 
 From there we could take the same steps, or even use BERT for the sentiment analysis too.</p>
+
+<p>On all of our minds today, too: What about AI? VADER and BERT are relatively old by comparison - it would be interesting to validate/get a second opinion from an AI model run on the dataset. If the results are interesting, I’ll post them here.</p>
 
 <p>Ultimately though, even with all of this cleaning - the reddit community is just ‘one group’ of consumers, it can add context to the company’s external evaluation, but shouldn’t be used as a sole resource.</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="reddit" /><category term="sentiment" /><category term="NLP" /><summary type="html"><![CDATA[I started interviewing for hellofresh recently. Part of the job posting listed ‘experience with unstructured data’ - so I decided to take a look at the sentiment in the subreddit r/hellofresh about.. hellofresh!]]></summary></entry><entry><title type="html">Building Tools for Better Experiments</title><link href="http://localhost:4000/2025/07/25/doe-hero.html" rel="alternate" type="text/html" title="Building Tools for Better Experiments" /><published>2025-07-25T00:00:00-05:00</published><updated>2025-07-25T00:00:00-05:00</updated><id>http://localhost:4000/2025/07/25/doe-hero</id><content type="html" xml:base="http://localhost:4000/2025/07/25/doe-hero.html"><![CDATA[<p>Design of Experiments (DOE) is a key tool for planning efficient research. Yet, due to limited access to tools and knowledge, the vast majority of experiments are done ‘one factor at a time’ (OFAAT). So, I built and published a free app with Python and streamlit called “<a href="https://doe-hero.streamlit.app/">DOE Hero</a>” to help.</p>
 
