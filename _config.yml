@@ -19,6 +19,7 @@ minima:
     - about.md
     - portfolio.md
     - services/index.md
+    - live-projects.md
 
   show_excerpts: true
   social_links:
