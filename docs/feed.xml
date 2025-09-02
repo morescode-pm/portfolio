@@ -1,5 +1,116 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-08-24T09:47:29-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
-</subtitle><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><entry><title type="html">HOA Budgeting - Extracting clarity from a PDF</title><link href="http://localhost:4000/2025/08/08/hoa-budgets.html" rel="alternate" type="text/html" title="HOA Budgeting - Extracting clarity from a PDF" /><published>2025-08-08T00:00:00-05:00</published><updated>2025-08-08T00:00:00-05:00</updated><id>http://localhost:4000/2025/08/08/hoa-budgets</id><content type="html" xml:base="http://localhost:4000/2025/08/08/hoa-budgets.html"><![CDATA[<p>Do you live in an HOA and get a once-per-year pdf with the breakdown of where your dues were allocated? If yes, then this post is for you!
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-09-02T09:44:28-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">MORESCODE ANALYTICS LLC</title><subtitle>Data science, analytics, and statistical consulting.
+</subtitle><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><entry><title type="html">American Health Insurance - Graphed!</title><link href="http://localhost:4000/2025/08/31/healthcare-plans.html" rel="alternate" type="text/html" title="American Health Insurance - Graphed!" /><published>2025-08-31T00:00:00-05:00</published><updated>2025-08-31T00:00:00-05:00</updated><id>http://localhost:4000/2025/08/31/healthcare-plans</id><content type="html" xml:base="http://localhost:4000/2025/08/31/healthcare-plans.html"><![CDATA[<p>Health insurance; Open Enrollment. At least once a year, all Americans are offered a chance to sign up for health insurance through their employer, or through the healthcare marketplace.</p>
+
+<p>Monthly premiums, Deductibles, Out-of-pocket maximums, HSAs, FSAs, Co-insurance, Copay.. forcing everyone to <em>GAMBLE</em> on what they think they might need - and try to do the math to understand what their best options are.</p>
+
+<p>It sucks.</p>
+
+<p>This project aims to make it suck just a bit less.</p>
+
+<p><a href="https://public.tableau.com/app/profile/paul.moresco/viz/heath_insurance_calculator/InsurancePlanComparison">Link to Live Tableau Dashboard / Calculator Here</a></p>
+<div class="full-width">
+    <div id="vizWrapper">
+        <tableau-viz id="tableauViz" src="https://public.tableau.com/views/heath_insurance_calculator/InsurancePlanComparison" toolbar="bottom" hide-tabs="" device="desktop">
+        </tableau-viz>
+    </div>
+</div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">**Important Note**</code> : Every plan is different, so your monthly medical costs could be much lower or higher based on what your insurance covers. Some plans have copays, others don’t, others still have expense limits - your situation is going to be unique and this content is created for general information purposes.</p>
+</blockquote>
+
+<blockquote>
+  <p><em>This is not financial advice</em>. Seek advice from a qualified financial professional.</p>
+</blockquote>
+
+<h3 id="introduction">Introduction</h3>
+<p>If you’re like me: whether you’re scrolling on the healthcare marketplace or reviewing a PDF of options from employer plans - before you’ve made it through page 4 you just want it to be over. It’s a lot to manage - and something you REALLY don’t want to get wrong. High stakes gambling with your health and your finances.</p>
+
+<p>So, I set out to use my skills to turn another PDF into something useful: A tableau dashboard about comparing Health Insurance options.
+The goal is to visualize a comparison of plan annual costs VS. what you expect you might need to pay monthly - your Est. Monthly Medical Costs.</p>
+
+<p><strong>Est. Monthly Medical Costs</strong>: If you estimate needing to spend $1200 per year, this is ($1200 / 12) $100.</p>
+
+<h3 id="data-sources">Data Sources</h3>
+<p>The solution here is entirely algebra based. The variables make the plan and the equation doesn’t change.</p>
+
+<p>First some definitions:</p>
+<ul>
+  <li><strong>Monthly Premium</strong>: What you owe every month of the year to be enrolled in the plan.</li>
+  <li><strong>Deductible</strong>: How much you will pay (in addition to the premiums) before any benefits kick in.</li>
+  <li><strong>Out-of-pocket Max (OOP)</strong>: According the the Affodable Care Act, after hitting this amount you plan will cover 100% of covered services.</li>
+  <li><strong>Coinsurance</strong>: Your share of the costs of a covered service as a percentage. ex 20% of $100 you will owe $20.</li>
+  <li><strong>Health Savings / Employer Benefit</strong>: Some companies will contribute to a health savings account if you’re enrolled in a high deductible plan.</li>
+  <li><strong>CDHP</strong>: Consumer Driven Healthcare Plan</li>
+  <li><strong>HMO</strong>: Health Maintenance Organization</li>
+  <li><strong>In Network / Out of Network</strong>: Doctors and hospitals have some choice to work with providers. If they do, they get the network negotiated costs &amp; theoretically access to more patients from that network. It’s a gentle form of negotiated threat.</li>
+</ul>
+
+<p>Then some plan costs - we’ll use some examples from the publicly accessible State Of Illinois - Deparment of Centra Management Services - Bureau of Benefits FY2026 documentation. <a href="https://cms.illinois.gov/content/dam/soi/en/web/cms/benefits/stateemployee/documents/fy2026/26_SEGIP_ADA_041725.pdf">PDF Link Here</a><br />
+Generally speaking, government services are REALLY good.</p>
+
+<p>For a salary range of $45,601-$60,700 (Assuming everything is In network):<br />
+| Provider | Monthly Premium | Deductible | OOP Max | Coinsurance | Employer HSA Deposit|
+|———-|—————–|————|———|————-|———————|
+| <a href="https://www.aetnastateofillinois.com/application/files/1317/4558/8088/State_HMO_2025.pdf">AETNA HMO</a> | $176      | $0         | $3000   | mostly copay but we’ll use 15% for example       | $0                  |
+| <a href="https://cms.illinois.gov/content/dam/soi/en/web/cms/benefits/college/documents/fy2026/sbc/SBC_IL6800_B06803_0049_State%20of%20Illinois%20CIP%20_BAHMO_07-01-2025%20to%2006-30-2026_2012-07-01_v1.pdf">Blue Advantage HMO</a> | $150   | $0   | $3000   | mostly copay but we’ll use 10% for example | $0
+| <a href="https://www.aetnastateofillinois.com/application/files/2317/4558/8087/SEGIP_CDHP_PPO_2025.pdf">AETNA CDHP</a> | $151     | $1650      | $3000   | 10%         | $550</p>
+
+<p>Then since we’re just going to solve for Y given a series of Xs - we can just quickly generate that as a series in python:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">800</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s">'Est. Monthly Medical Costs'</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
+<span class="n">df</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'generated_data.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="health-plan-cost-calculations">Health Plan Cost Calculations</h3>
+
+<p>Here are the key calculations for determining the overall cost of a health plan.</p>
+
+<h4 id="1-annual-medical-costs">1. Annual Medical Costs</h4>
+
+<p>This is a straightforward calculation based on the estimated monthly medical costs.</p>
+<pre><code class="language-SQL">-- Annual Medical Costs = 
+[Est. Monthly Medical Costs] * 12
+</code></pre>
+
+<h4 id="2-estimated-annual-plan-costs">2. Estimated Annual Plan Costs</h4>
+
+<p>This formula calculates the total estimated cost of the health plan, combining premiums, out-of-pocket expenses, and any employer contributions.</p>
+
+<pre><code class="language-SQL">-- Estimated Annual Plan Costs =
+( [Plan 1 Monthly Premium] * 12 ) + 
+
+MIN(
+    -- Medical expenses before and after deductible
+    IF [Annual Medical Costs] &lt;= [Plan 1 Deductible] THEN [Annual Medical Costs]
+    ELSE [Plan 1 Deductible] + ([Annual Medical Costs] - [Plan 1 Deductible]) * [Plan 1 Coinsurance] 
+    END,
+
+    -- Out-of-pocket maximum
+    [Plan 1 OOP Max]
+) - [Plan 1 ER HSA Deposit]
+</code></pre>
+
+<h3 id="dashboard-example">Dashboard Example</h3>
+<ol>
+  <li>Enter your plan comparisons</li>
+  <li>Enter you estimated monthly costs</li>
+</ol>
+
+<p>Looking at the graph and how the plans compare, give your costs a +20% buffer to the right (more expensive) and pick a plan based on those expectations.</p>
+
+<p><img src="/assets/images/healthcare/1-plan_compare.png" /></p>
+
+<p>In this examples, if the monthly costs were anticipated at $100 - the Blue Advantage HMO plan would be the best option.</p>
+
+<p>In fact, with these examples, Blue Advantage is the right plan until about $2000/mo costs.</p>
+
+<p>However, you will not get any HSA unless you go wit AETNA CDHP - so if you’re expecting minimal or no expenses (risky assumption), then maybe the CDHP would make sense.</p>
+
+<p><strong>Don’t make this assumption.</strong></p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="tableau" /><summary type="html"><![CDATA[Health insurance; Open Enrollment. At least once a year, all Americans are offered a chance to sign up for health insurance through their employer, or through the healthcare marketplace.]]></summary></entry><entry><title type="html">HOA Budgeting - Extracting clarity from a PDF</title><link href="http://localhost:4000/2025/08/08/hoa-budgets.html" rel="alternate" type="text/html" title="HOA Budgeting - Extracting clarity from a PDF" /><published>2025-08-08T00:00:00-05:00</published><updated>2025-08-08T00:00:00-05:00</updated><id>http://localhost:4000/2025/08/08/hoa-budgets</id><content type="html" xml:base="http://localhost:4000/2025/08/08/hoa-budgets.html"><![CDATA[<p>Do you live in an HOA and get a once-per-year pdf with the breakdown of where your dues were allocated? If yes, then this post is for you!
 Instead of trying (and failing) to understand what on earth the figures in a poorly structured table mean - let’s build a dashboard in Tableau.</p>
 
 <p>Here’s the <a href="https://public.tableau.com/app/profile/paul.moresco/viz/HOABudgetReview/HOABudgetBreakdown">Dashboard</a> - embedded up front so you can get right into the digging:</p>
@@ -1032,158 +1143,4 @@ To iterate and improve here’s a short list of what to do first.</p>
 <h2 id="update">Update</h2>
 <p>The original dataloaders object was being passed “Resize(224)” - this was doing a center crop and removing the target species sometimes. By adding Resize(224, method=’squish’) and a class for cropping the top and bottom - this was resolved while also removing the cameratrap overlays.</p>
 
-<p>This, plus checking timm for state of the art models and switching to ConvNeXt_tiny improved the error rate from 22% to 11%!</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="fastai" /><category term="html" /><category term="js" /><category term="gradio" /><category term="computervision" /><category term="CNN" /><category term="huggingface" /><summary type="html"><![CDATA[Training and publishing a computer vision model on the web. Try It Here! 🧪 Lightweight JavaScript demo {you may need to visit the gradio/huggingface link below to wake up the app if it has been a while} 🚀 Full-featured Gradio app]]></summary></entry><entry><title type="html">Building a Webapp for Species Geofencing</title><link href="http://localhost:4000/2025/06/07/species-geofence.html" rel="alternate" type="text/html" title="Building a Webapp for Species Geofencing" /><published>2025-06-07T00:00:00-05:00</published><updated>2025-06-07T00:00:00-05:00</updated><id>http://localhost:4000/2025/06/07/species-geofence</id><content type="html" xml:base="http://localhost:4000/2025/06/07/species-geofence.html"><![CDATA[<p>One of the issues we experienced with speciesnet classification was results where the species was not valid for our location. In speciesnet - specifying a geofence coordinate will cause missclassifications to move up to the highest level hierarchy - in most cases, this classifies an animal as “animal.”</p>
-
-<p>So, to help validate lists of species relevant to our area, I built a <a href="https://morescode-pm.github.io/geofence-polygon/">webapp for looking up species</a>.
-<a href="https://morescode-pm.github.io/geofence-polygon/" target="_blank">
-    <img src="/assets/images/geofence/1_previewapp.png" />
-</a></p>
-
-<h2 id="a-well-known-issue">A well known issue</h2>
-<p>I ran a test of google’s species net and wrote about the <a href="/2025/05/22/camera-trap-computer-vision.html">results here</a>.</p>
-
-<p>Species geofencing is problematic. Animals don’t seem to care where you draw lines on a map and they don’t have “guest books” where they can sign their names. We rely on human observation to tell us if a species is found in an area or not.</p>
-
-<p>Of all the public resources for these observations - the <em>Global Biodiversity Information Facility (GBIF)</em> API has a great search query representation for polygons. This search is <a href="https://www.gbif.org/occurrence/search">baked into their tools</a>, but I wanted to be able to filter the results for unique species instead of by occurence.</p>
-
-<p>The ability to draw on a map and be presented with a unique list of confirmed species was the main goal.</p>
-
-<p>Cursor, Jules, and GitHub CoPilot created the majority of the code - we started in Flask and then I asked for a refactor for a full front end site for easy hosting (wow).</p>
-
-<p>The project repo and branch can be found on my <a href="https://github.com/morescode-pm/geofence-polygon/tree/convert/only-frontend">GitHub</a>.</p>
-
-<h2 id="cleaning-ai-computer-vision-results-based-on-polygon-geofence-occurrences">Cleaning AI computer vision results based on polygon geofence occurrences</h2>
-<p>This polygon was used to then submit a query to the GBIF dataset saved on Google BigQuery.</p>
-
-<pre><code class="language-SQL">WITH unique_species AS (
-    SELECT DISTINCT
-    class,
-    `order`,
-    family,
-    genus,
-    species,
-    taxonkey
-
-    FROM
-    `bigquery-public-data.gbif.occurrences` 
-
-    WHERE 
-    ST_WITHIN(
-        ST_GEOGPOINT(decimallongitude, decimallatitude),
-        ST_GEOGFROMTEXT('POLYGON((
-            -87.69081115722656 42.005312912238956, 
-            -87.66952514648438 41.955818412264705, 
-            -87.61596679687501 41.905774595463853, 
-            -87.60910034179689 41.85779952612765, 
-            -87.62626647949219 41.815801430687642, 
-            -87.7196502685547 41.808127409160392, 
-            -87.71690368652345 41.842908943268263, 
-            -87.67982482910158 41.88533726561532, 
-            -87.72377014160158 41.946119107705776, 
-            -87.78625488281251 41.99051961904691, 
-            -87.69081115722656 42.005312912238956
-        ))')
-    )
-    AND LOWER(phylum) = "chordata" # This is the phylum that includes mammals and birds
-    
-    LIMIT 1000 
-)
-
-SELECT
-  t1.*,
-  ARRAY_AGG(DISTINCT countrycode IGNORE NULLS) AS country_codes
-
-FROM unique_species t1
-LEFT JOIN `bigquery-public-data.gbif.occurrences` 
-USING(taxonkey)
-
-GROUP BY 
-  class,
-  `order`,
-  family,
-  genus,
-  species,
-  taxonkey
-</code></pre>
-
-<p>Less than 1000 were returned in this query, but that could be a large bill if the polygon area were huge</p>
-
-<h2 id="using-geofencing-for-validated-species-lists-vs-speciesnet">Using geofencing for validated species lists vs. speciesnet</h2>
-<p>There are 3 datasets worth using to clean up missclassified speciesnet data:</p>
-<ol>
-  <li>The predictions dataset itself ( from our non-geofenced speciesnet inference on our images )</li>
-  <li>The published SpeciesNet taxonomy_release.txt file ( a list of all possible output classifications )</li>
-  <li>A geofenced dataset from the polygon created using the webapp ( filtering gbif occurrences by location )</li>
-</ol>
-
-<p>Each dataset has its own structure, but ultimately they share a listing of the class/order/family/genus/species heirarchy of taxonomic classification.<br />
-Joining and filtering to find what species should be valid for a location is possible almost entirely in python-pandas.</p>
-
-<iframe src="/assets/notebooks/html/species-mismatch.html" width="100%" height="400" style="border:1px solid #ccc; border-radius:8px;"></iframe>
-<p>The notebook for this analysis can be <a href="https://github.com/morescode-pm/urbanrivers-speciesnet-preview/blob/store-and-combine-predicts/_speciesnet-taxa/species_mismatch_analysis.ipynb">found here</a>.</p>
-
-<p>Example of matching vs non-matching lists:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>| matching (speciesnet&amp;gbif-chi)   | non_matching (speciesnet!gbif-chi)    |
-|----------------------------------|---------------------------------------|
-| blank                            | human                                 |
-| bird                             | western pond turtle                   |
-| mallard                          | anseriformes order                    |
-| american coot                    | domestic dog                          |
-| northern raccoon                 | reptile                               |
-| great blue heron                 | domestic cattle                       |
-| vehicle                          | wild turkey                           |
-| eastern cottontail               | central american agouti              |
-| brown rat                        | white-tailed deer                     |
-| domestic cat                     | nutria                                |
-| muskrat                          | crocodile                             |
-| wood duck                        | wild boar                             |
-| coyote                           | mammal                                |
-| canada goose                     | common tapeti                         |
-| american beaver                  | tome's spiny rat                      |
-| eastern gray squirrel            | ocellated turkey                      |
-| domestic horse                   | rodent                                |
-| american robin                   | collared peccary                      |
-| white-crowned sparrow           | spotted paca                          |
-| sylvilagus species              | madagascar crested ibis              |
-| song sparrow                     | canis species                         |
-| snowy egret                      | red squirrel                          |
-| california quail                 | bushy-tailed woodrat                  |
-| north american river otter       | pronghorn                             |
-| eastern chipmunk                 | eastern red forest rat               |
-| &lt;NA&gt;                             | domestic chicken                      |
-| &lt;NA&gt;                             | blood pheasant                        |
-| &lt;NA&gt;                             | white-lipped peccary                 |
-| &lt;NA&gt;                             | red acouchi                           |
-| &lt;NA&gt;                             | desert cottontail                     |
-| &lt;NA&gt;                             | plains zebra                          |
-| &lt;NA&gt;                             | rufescent tiger-heron                 |
-| &lt;NA&gt;                             | owl                                   |
-| &lt;NA&gt;                             | common wombat                         |
-| &lt;NA&gt;                             | bearded pig                           |
-| &lt;NA&gt;                             | fossa                                 |
-| &lt;NA&gt;                             | nine-banded armadillo                 |
-| &lt;NA&gt;                             | guenther's dik-dik                    |
-</code></pre></div></div>
-
-<h2 id="officially-not-in-illinois-at-all">Officially not in Illinois at all:</h2>
-
-<pre>| common_name              | state_code                                           |
-|--------------------------|------------------------------------------------------|
-| bushy-tailed woodrat     | [CO, CA, WY, OR, UT, WA, NM, MT, SD, NV, ID, ...]     |
-| central american agouti  | [TX]                                                 |
-| common wombat            | [NM, WA]                                             |
-| crocodile                | [FL]                                                 |
-| desert cottontail        | [CA, AZ, CO, NM, TX, NV, UT, WY, MT, NE, SD, KS, ...] |
-| fossa                    | [NE, TX]                                             |
-| guenther's dik-dik       | [TX]                                                 |
-| ocellated turkey         | [CA, FL, HI, OK]                                     |
-| plains zebra             | [CA, NM, TX, WA, AK, CO, MA, OH, OR, UT]             |
-| pronghorn                | [WY, CO, NM, UT, AZ, SD, MT, OR, ID, TX, NV, CO, ...] |
-| red acouchi              | [NE, NY, WA]                                         |
-| rufescent tiger-heron    | [HI]                                                 |
-| spotted paca             | [CO, CA, RI, UT, WA]                                 |
-| western pond turtle      | [CA, OR, NV]                                         |
-| white-lipped peccary     | [TX, CO, TX]                                         |</pre>
-
-<p>Note we didn’t apply any geofencing to this run of speciesnet - so it’s expected to return the highest confidence match without ‘rolling-up’ to the higher taxonomy level.</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="ai" /><category term="html" /><category term="js" /><category term="cursor" /><category term="jules" /><category term="claude" /><category term="gpt4o" /><summary type="html"><![CDATA[One of the issues we experienced with speciesnet classification was results where the species was not valid for our location. In speciesnet - specifying a geofence coordinate will cause missclassifications to move up to the highest level hierarchy - in most cases, this classifies an animal as “animal.”]]></summary></entry></feed>
+<p>This, plus checking timm for state of the art models and switching to ConvNeXt_tiny improved the error rate from 22% to 11%!</p>]]></content><author><name>Paul Moresco</name><email>hello@morescode-analytics.com</email></author><category term="python" /><category term="fastai" /><category term="html" /><category term="js" /><category term="gradio" /><category term="computervision" /><category term="CNN" /><category term="huggingface" /><summary type="html"><![CDATA[Training and publishing a computer vision model on the web. Try It Here! 🧪 Lightweight JavaScript demo {you may need to visit the gradio/huggingface link below to wake up the app if it has been a while} 🚀 Full-featured Gradio app]]></summary></entry></feed>

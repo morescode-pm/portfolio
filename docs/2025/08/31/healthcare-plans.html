@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>American Health Insurance - Graphed! | MORESCODE ANALYTICS LLC</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="American Health Insurance - Graphed!" />
+<meta name="author" content="Paul Moresco" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Health insurance; Open Enrollment. At least once a year, all Americans are offered a chance to sign up for health insurance through their employer, or through the healthcare marketplace." />
+<meta property="og:description" content="Health insurance; Open Enrollment. At least once a year, all Americans are offered a chance to sign up for health insurance through their employer, or through the healthcare marketplace." />
+<link rel="canonical" href="http://localhost:4000/2025/08/31/healthcare-plans.html" />
+<meta property="og:url" content="http://localhost:4000/2025/08/31/healthcare-plans.html" />
+<meta property="og:site_name" content="MORESCODE ANALYTICS LLC" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-08-31T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="American Health Insurance - Graphed!" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Paul Moresco"},"dateModified":"2025-08-31T00:00:00-05:00","datePublished":"2025-08-31T00:00:00-05:00","description":"Health insurance; Open Enrollment. At least once a year, all Americans are offered a chance to sign up for health insurance through their employer, or through the healthcare marketplace.","headline":"American Health Insurance - Graphed!","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2025/08/31/healthcare-plans.html"},"url":"http://localhost:4000/2025/08/31/healthcare-plans.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="MORESCODE ANALYTICS LLC" />
+</head>
+<script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+
+  <style>
+    .full-width{
+      width: 1200px;
+      margin-left: -200px;
+    }
+
+    #vizWrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      height: 90vh;      /* use % of screen height */
+    }
+
+    tableau-viz {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: none;
+    }
+  </style>
+
+  <body><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">MORESCODE ANALYTICS LLC</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/about/">About</a>
+  <a class="nav-item" href="/portfolio.html">Portfolio Index</a>
+  <a class="nav-item" href="/services/">Services</a>
+  <a class="nav-item" href="/live-projects/">Live Projects</a>
+</div>
+      </nav>
+  </div>
+</header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="post"><h1 class="page-heading" style="text-align: center;">American Health Insurance - Graphed!</h1><div class="post-meta" style="text-align: center; color: #666; margin-bottom: 1.5em;">
+    Aug 31, 2025&nbsp;-&nbsp;<span class="post-tag" style="color: teal">#python</a>, <span class="post-tag" style="color: teal">#tableau</a></div>
+
+  <div class="post-content">
+    <p>Health insurance; Open Enrollment. At least once a year, all Americans are offered a chance to sign up for health insurance through their employer, or through the healthcare marketplace.</p>
+
+<p>Monthly premiums, Deductibles, Out-of-pocket maximums, HSAs, FSAs, Co-insurance, Copay.. forcing everyone to <em>GAMBLE</em> on what they think they might need - and try to do the math to understand what their best options are.</p>
+
+<p>It sucks.</p>
+
+<p>This project aims to make it suck just a bit less.</p>
+
+<p><a href="https://public.tableau.com/app/profile/paul.moresco/viz/heath_insurance_calculator/InsurancePlanComparison">Link to Live Tableau Dashboard / Calculator Here</a></p>
+<div class="full-width">
+    <div id="vizWrapper">
+        <tableau-viz id="tableauViz" src="https://public.tableau.com/views/heath_insurance_calculator/InsurancePlanComparison" toolbar="bottom" hide-tabs="" device="desktop">
+        </tableau-viz>
+    </div>
+</div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">**Important Note**</code> : Every plan is different, so your monthly medical costs could be much lower or higher based on what your insurance covers. Some plans have copays, others don’t, others still have expense limits - your situation is going to be unique and this content is created for general information purposes.</p>
+</blockquote>
+
+<blockquote>
+  <p><em>This is not financial advice</em>. Seek advice from a qualified financial professional.</p>
+</blockquote>
+
+<h3 id="introduction">Introduction</h3>
+<p>If you’re like me: whether you’re scrolling on the healthcare marketplace or reviewing a PDF of options from employer plans - before you’ve made it through page 4 you just want it to be over. It’s a lot to manage - and something you REALLY don’t want to get wrong. High stakes gambling with your health and your finances.</p>
+
+<p>So, I set out to use my skills to turn another PDF into something useful: A tableau dashboard about comparing Health Insurance options.
+The goal is to visualize a comparison of plan annual costs VS. what you expect you might need to pay monthly - your Est. Monthly Medical Costs.</p>
+
+<p><strong>Est. Monthly Medical Costs</strong>: If you estimate needing to spend $1200 per year, this is ($1200 / 12) $100.</p>
+
+<h3 id="data-sources">Data Sources</h3>
+<p>The solution here is entirely algebra based. The variables make the plan and the equation doesn’t change.</p>
+
+<p>First some definitions:</p>
+<ul>
+  <li><strong>Monthly Premium</strong>: What you owe every month of the year to be enrolled in the plan.</li>
+  <li><strong>Deductible</strong>: How much you will pay (in addition to the premiums) before any benefits kick in.</li>
+  <li><strong>Out-of-pocket Max (OOP)</strong>: According the the Affodable Care Act, after hitting this amount you plan will cover 100% of covered services.</li>
+  <li><strong>Coinsurance</strong>: Your share of the costs of a covered service as a percentage. ex 20% of $100 you will owe $20.</li>
+  <li><strong>Health Savings / Employer Benefit</strong>: Some companies will contribute to a health savings account if you’re enrolled in a high deductible plan.</li>
+  <li><strong>CDHP</strong>: Consumer Driven Healthcare Plan</li>
+  <li><strong>HMO</strong>: Health Maintenance Organization</li>
+  <li><strong>In Network / Out of Network</strong>: Doctors and hospitals have some choice to work with providers. If they do, they get the network negotiated costs &amp; theoretically access to more patients from that network. It’s a gentle form of negotiated threat.</li>
+</ul>
+
+<p>Then some plan costs - we’ll use some examples from the publicly accessible State Of Illinois - Deparment of Centra Management Services - Bureau of Benefits FY2026 documentation. <a href="https://cms.illinois.gov/content/dam/soi/en/web/cms/benefits/stateemployee/documents/fy2026/26_SEGIP_ADA_041725.pdf">PDF Link Here</a><br />
+Generally speaking, government services are REALLY good.</p>
+
+<p>For a salary range of $45,601-$60,700 (Assuming everything is In network):<br />
+| Provider | Monthly Premium | Deductible | OOP Max | Coinsurance | Employer HSA Deposit|
+|———-|—————–|————|———|————-|———————|
+| <a href="https://www.aetnastateofillinois.com/application/files/1317/4558/8088/State_HMO_2025.pdf">AETNA HMO</a> | $176      | $0         | $3000   | mostly copay but we’ll use 15% for example       | $0                  |
+| <a href="https://cms.illinois.gov/content/dam/soi/en/web/cms/benefits/college/documents/fy2026/sbc/SBC_IL6800_B06803_0049_State%20of%20Illinois%20CIP%20_BAHMO_07-01-2025%20to%2006-30-2026_2012-07-01_v1.pdf">Blue Advantage HMO</a> | $150   | $0   | $3000   | mostly copay but we’ll use 10% for example | $0
+| <a href="https://www.aetnastateofillinois.com/application/files/2317/4558/8087/SEGIP_CDHP_PPO_2025.pdf">AETNA CDHP</a> | $151     | $1650      | $3000   | 10%         | $550</p>
+
+<p>Then since we’re just going to solve for Y given a series of Xs - we can just quickly generate that as a series in python:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">800</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s">'Est. Monthly Medical Costs'</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
+<span class="n">df</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'generated_data.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="health-plan-cost-calculations">Health Plan Cost Calculations</h3>
+
+<p>Here are the key calculations for determining the overall cost of a health plan.</p>
+
+<h4 id="1-annual-medical-costs">1. Annual Medical Costs</h4>
+
+<p>This is a straightforward calculation based on the estimated monthly medical costs.</p>
+<pre><code class="language-SQL">-- Annual Medical Costs = 
+[Est. Monthly Medical Costs] * 12
+</code></pre>
+
+<h4 id="2-estimated-annual-plan-costs">2. Estimated Annual Plan Costs</h4>
+
+<p>This formula calculates the total estimated cost of the health plan, combining premiums, out-of-pocket expenses, and any employer contributions.</p>
+
+<pre><code class="language-SQL">-- Estimated Annual Plan Costs =
+( [Plan 1 Monthly Premium] * 12 ) + 
+
+MIN(
+    -- Medical expenses before and after deductible
+    IF [Annual Medical Costs] &lt;= [Plan 1 Deductible] THEN [Annual Medical Costs]
+    ELSE [Plan 1 Deductible] + ([Annual Medical Costs] - [Plan 1 Deductible]) * [Plan 1 Coinsurance] 
+    END,
+
+    -- Out-of-pocket maximum
+    [Plan 1 OOP Max]
+) - [Plan 1 ER HSA Deposit]
+</code></pre>
+
+<h3 id="dashboard-example">Dashboard Example</h3>
+<ol>
+  <li>Enter your plan comparisons</li>
+  <li>Enter you estimated monthly costs</li>
+</ol>
+
+<p>Looking at the graph and how the plans compare, give your costs a +20% buffer to the right (more expensive) and pick a plan based on those expectations.</p>
+
+<p><img src="/assets/images/healthcare/1-plan_compare.png" /></p>
+
+<p>In this examples, if the monthly costs were anticipated at $100 - the Blue Advantage HMO plan would be the best option.</p>
+
+<p>In fact, with these examples, Blue Advantage is the right plan until about $2000/mo costs.</p>
+
+<p>However, you will not get any HSA unless you go wit AETNA CDHP - so if you’re expecting minimal or no expenses (risky assumption), then maybe the CDHP would make sense.</p>
+
+<p><strong>Don’t make this assumption.</strong></p>
+
+
+  </div>
+</div>
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/"></data>
+
+  <div class="wrapper">
+    <div class="footer-row" style="text-align: center;"><div class="footer-author" style="margin-bottom: 8px;">
+          <span class="p-name">&copy; 2025 Paul Moresco </span>&nbsp;|&nbsp;
+            <a class="u-email" href="mailto:hello@morescode-analytics.com">hello@morescode-analytics.com</a></div><div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/morescode-pm" target="_blank" title="GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://www.linkedin.com/in/paul-moresco" target="_blank" title="Linkedin">
+      <span class="grey fa-brands fa-linkedin fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://www.kaggle.com/morescope/" target="_blank" title="Kaggle">
+      <span class="grey fa-brands fa-kaggle fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://public.tableau.com/app/profile/paul.moresco/vizzes" target="_blank" title="Tableau Public">
+      <span class="grey fa-brands fa-salesforce fa-lg"></span>
+    </a>
+  </li>
+</ul></div>
+    </div>
+  </div>
+</footer></body>
+
+</html>
